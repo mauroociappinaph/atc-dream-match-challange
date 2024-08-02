@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import playersApi from "@/app/api/playersApi";
-import { usePlayerListStore } from "@/store/store"; // Assuming this is the store you provided
+import { usePlayerListStore } from "@/store/store";
+import { Player } from "@/types/index";
 
 export default function TeamForm() {
   const {
@@ -69,7 +70,7 @@ export default function TeamForm() {
       return;
     }
 
-    // Here you would handle the logic to save the team, e.g., send it to an API or add to Zustand store for teams
+    // Aquí agregarías la lógica para guardar el equipo, por ejemplo, enviarlo a una API o agregarlo al store de Zustand
 
     setTeamName("");
     setPlayers([]);
@@ -84,24 +85,21 @@ export default function TeamForm() {
       <CardContent>
         <div className="grid gap-4">
           <div className="space-y-2">
-            <Label htmlFor="teamName">Team Name</Label>
+            <Label htmlFor="teamName">Nombre del Equipo</Label>
             <Input
               id="teamName"
               value={teamName}
               onChange={handleTeamNameChange}
-              placeholder="Enter team name"
+              placeholder="Ingrese nombre del equipo"
             />
           </div>
           <div className="space-y-2">
-            <Label>Players</Label>
+            <Label>Jugadores</Label>
             <div className="flex items-center justify-between">
               <Select
                 onValueChange={(value) => handlePlayerSelect(parseInt(value))}
                 className="w-full"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select players" />
-                </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     {players.map((player) => (
@@ -115,9 +113,6 @@ export default function TeamForm() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              <div className="ml-4 font-medium">
-                {selectedPlayers.length}/5 players
-              </div>
             </div>
             <div className="flex gap-2">
               {selectedPlayers.map((player) => (
