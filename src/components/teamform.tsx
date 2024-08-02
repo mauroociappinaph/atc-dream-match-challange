@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -19,27 +19,67 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import playersApi from "@/app/api/playersApi";
+import { usePlayerListStore } from "@/store/store"; // Assuming this is the store you provided
 
 export default function TeamForm() {
+  const {
+    players,
+    selectedPlayers,
+    setPlayers,
+    addSelectedPlayer,
+    removeSelectedPlayer,
+  } = usePlayerListStore();
+
   const [teamName, setTeamName] = useState("");
-  const [players, setPlayers] = useState([]);
-  const [selectedPlayers, setSelectedPlayers] = useState([]);
-  const handleTeamNameChange = (e) => {
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const playersData = await playersApi.getPlayers();
+        setPlayers(playersData);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      }
+    };
+
+    fetchPlayers();
+  }, [setPlayers]);
+
+  const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTeamName(e.target.value);
   };
-  const handlePlayerSelect = (player) => {
-    if (selectedPlayers.length < 5) {
-      setSelectedPlayers([...selectedPlayers, player]);
+
+  const handlePlayerSelect = (playerId: number) => {
+    const selectedPlayer = players.find(
+      (player) => player.player_id === playerId
+    );
+    if (selectedPlayer && selectedPlayers.length < 5) {
+      addSelectedPlayer(selectedPlayer);
     }
   };
-  const handlePlayerRemove = (player) => {
-    setSelectedPlayers(selectedPlayers.filter((p) => p !== player));
+
+  const handlePlayerRemove = (playerId: number) => {
+    removeSelectedPlayer(playerId);
   };
-  const handleSaveChanges = () => {};
+
+  const handleSaveChanges = () => {
+    if (teamName.trim() === "" || selectedPlayers.length === 0) {
+      alert("Please enter a team name and select at least one player.");
+      return;
+    }
+
+    // Here you would handle the logic to save the team, e.g., send it to an API or add to Zustand store for teams
+
+    setTeamName("");
+    setPlayers([]);
+    alert("Team saved successfully!");
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Arma tu formación</CardTitle>
+        <CardTitle>Crea tu equipo</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
@@ -55,17 +95,23 @@ export default function TeamForm() {
           <div className="space-y-2">
             <Label>Players</Label>
             <div className="flex items-center justify-between">
-              <Select onValueChange={handlePlayerSelect} className="w-full">
+              <Select
+                onValueChange={(value) => handlePlayerSelect(parseInt(value))}
+                className="w-full"
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select players" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="player1">Player 1</SelectItem>
-                    <SelectItem value="player2">Player 2</SelectItem>
-                    <SelectItem value="player3">Player 3</SelectItem>
-                    <SelectItem value="player4">Player 4</SelectItem>
-                    <SelectItem value="player5">Player 5</SelectItem>
+                    {players.map((player) => (
+                      <SelectItem
+                        key={player.player_id}
+                        value={player.player_id.toString()}
+                      >
+                        {player.player_name}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -74,16 +120,16 @@ export default function TeamForm() {
               </div>
             </div>
             <div className="flex gap-2">
-              {selectedPlayers.map((player, index) => (
+              {selectedPlayers.map((player) => (
                 <div
-                  key={index}
+                  key={player.player_id}
                   className="flex items-center gap-2 bg-muted px-2 py-1 rounded-md"
                 >
-                  {player}
+                  {player.player_name}
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handlePlayerRemove(player)}
+                    onClick={() => handlePlayerRemove(player.player_id)}
                   >
                     <XIcon className="w-4 h-4" />
                   </Button>
@@ -94,14 +140,22 @@ export default function TeamForm() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button variant="outline">Cancel</Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setTeamName("");
+            setPlayers([]);
+          }}
+        >
+          Cancel
+        </Button>
         <Button onClick={handleSaveChanges}>Save Changes</Button>
       </CardFooter>
     </Card>
   );
 }
 
-function XIcon(props) {
+function XIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
