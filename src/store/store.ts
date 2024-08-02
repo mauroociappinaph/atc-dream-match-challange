@@ -1,26 +1,24 @@
 // Crea el store de zustand
 import create from "zustand";
-
-interface Player {
-    player_id: string;
-    player_name: string;
-    player_type: string;
-    player_image: string;
-}
-
-interface PlayerListStore {
-    players: Player[];
-    addPlayer: (player: Player) => void;
-    removePlayer: (player: Player) => void;
-}
-
-export default PlayerListStore;
+import { PlayerListStore } from "../types/index";
 
 // Crea el store de zustand
 export const usePlayerListStore = create<PlayerListStore>((set) => ({
     players: [],
-    addPlayer: (player) => set((state) => ({ players: [...state.players, player] })),
-    removePlayer: (player) => set((state) => ({ players: state.players.filter((p) => p !== player) })),
+    selectedPlayers: [],
+    searchTerm: "",
+    currentPage: 1,
+    setPlayers: (players) => set({ players }),
+    setSearchTerm: (term) => set({ searchTerm: term }),
+    setCurrentPage: (page) => set({ currentPage: page }),
+    addSelectedPlayer: (player) =>
+        set((state) => ({
+            selectedPlayers: [...state.selectedPlayers, player],
+        })),
+    removeSelectedPlayer: (player) =>
+        set((state) => ({
+            selectedPlayers: state.selectedPlayers.filter((p) => p !== player),
+        })),
 }));
 
 // Crea el store de zustand

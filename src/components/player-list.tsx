@@ -1,33 +1,27 @@
-// src/components/PlayerList.tsx
 "use client";
 
-import React from "react";
-
-import { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import playersApi from "@/app/api/playersApi";
-
-interface Player {
-  player_id: string;
-  player_name: string;
-  player_type: string;
-  player_image: string;
-}
+import { usePlayerListStore } from "@/store/store";
+import { Player } from "@/types/index";
 
 export default function PlayerList() {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    players,
+    selectedPlayers,
+    searchTerm,
+    currentPage,
+    setPlayers,
+    setSearchTerm,
+    setCurrentPage,
+    addSelectedPlayer,
+    removeSelectedPlayer,
+  } = usePlayerListStore();
   const playersPerPage = 6;
 
-  const indexOfLastPlayer = currentPage * playersPerPage;
-  const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
-  const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
-
-  const totalPages = Math.ceil(players.length / playersPerPage);
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
@@ -39,15 +33,20 @@ export default function PlayerList() {
     };
 
     fetchPlayers();
-  }, [searchTerm]);
+  }, [searchTerm, setPlayers]);
 
   const handlePlayerSelect = (player: Player) => {
     if (selectedPlayers.includes(player)) {
-      setSelectedPlayers(selectedPlayers.filter((p) => p !== player));
+      removeSelectedPlayer(player);
     } else {
-      setSelectedPlayers([...selectedPlayers, player]);
+      addSelectedPlayer(player);
     }
   };
+
+  const indexOfLastPlayer = currentPage * playersPerPage;
+  const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
+  const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
+  const totalPages = Math.ceil(players.length / playersPerPage);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -70,7 +69,7 @@ export default function PlayerList() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {players.slice(0, 6).map((player) => {
+        {currentPlayers.map((player) => {
           if (!player) {
             return null;
           }
@@ -99,8 +98,17 @@ export default function PlayerList() {
             </React.Fragment>
           );
         })}
-        <button onClick={handlePreviousPage}>Anterior</button>
-        <button onClick={handleNextPage}>Siguiente</button>
+      </div>
+      <div className="flex justify-between mt-4">
+        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+          Anterior
+        </Button>
+        <Button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages || totalPages === 0}
+        >
+          Siguiente
+        </Button>
       </div>
     </div>
   );
