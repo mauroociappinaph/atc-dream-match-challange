@@ -18,50 +18,32 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { usePlayerListStore } from "@/store/store";
+import { Team } from "@/types/index";
 
 export default function TeamList() {
-  const teams = [
-    {
-      id: 1,
-      name: "Team Alpha",
-      players: ["John Doe", "Jane Smith", "Bob Johnson", "Sarah Lee"],
-    },
-    {
-      id: 2,
-      name: "Team Beta",
-      players: [
-        "Michael Brown",
-        "Emily Davis",
-        "David Wilson",
-        "Olivia Taylor",
-      ],
-    },
-    {
-      id: 3,
-      name: "Team Gamma",
-      players: [
-        "Jessica Anderson",
-        "Christopher Perez",
-        "Samantha Flores",
-        "Daniel Ramirez",
-      ],
-    },
-  ];
+  const { teams, removeTeam } = usePlayerListStore();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [teamToDelete, setTeamToDelete] = useState(null);
-  const handleDelete = (team) => {
+  const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
+
+  const handleDelete = (team: Team) => {
     setTeamToDelete(team);
     setShowDeleteConfirmation(true);
   };
+
   const confirmDelete = () => {
-    console.log(`Deleting team: ${teamToDelete.name}`);
-    setShowDeleteConfirmation(false);
-    setTeamToDelete(null);
+    if (teamToDelete) {
+      removeTeam(teamToDelete.id);
+      setShowDeleteConfirmation(false);
+      setTeamToDelete(null);
+    }
   };
+
   const cancelDelete = () => {
     setShowDeleteConfirmation(false);
     setTeamToDelete(null);
   };
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {teams.map((team) => (

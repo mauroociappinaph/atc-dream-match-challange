@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
-import { Player } from "@/types/index";
+import { Player, Team } from "@/types/index";
 
 export default function TeamForm() {
   const {
@@ -30,6 +30,7 @@ export default function TeamForm() {
     setPlayers,
     addSelectedPlayer,
     removeSelectedPlayer,
+    addTeam,
   } = usePlayerListStore();
 
   const [teamName, setTeamName] = useState("");
@@ -70,10 +71,15 @@ export default function TeamForm() {
       return;
     }
 
-    // Aquí agregarías la lógica para guardar el equipo, por ejemplo, enviarlo a una API o agregarlo al store de Zustand
+    const newTeam: Team = {
+      id: Date.now(), // Using timestamp as a simple ID
+      name: teamName,
+      players: selectedPlayers.map((player) => player.player_name),
+    };
+
+    addTeam(newTeam);
 
     setTeamName("");
-    setPlayers([]);
     alert("Team saved successfully!");
   };
 
