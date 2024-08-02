@@ -12,9 +12,14 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
     setSearchTerm: (term) => set({ searchTerm: term }),
     setCurrentPage: (page) => set({ currentPage: page }),
     addSelectedPlayer: (player) =>
-        set((state) => ({
-            selectedPlayers: [...state.selectedPlayers, player],
-        })),
+        set((state) => {
+            if (state.selectedPlayers.length >= 5) {
+                return state;
+            }
+            return {
+                selectedPlayers: [...state.selectedPlayers, player],
+            };
+        }),
     removeSelectedPlayer: (player) =>
         set((state) => ({
             selectedPlayers: state.selectedPlayers.filter((p) => p !== player),
