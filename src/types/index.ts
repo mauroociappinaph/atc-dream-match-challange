@@ -15,4 +15,5 @@ export interface PlayerListStore {
     setCurrentPage: (page: number) => void;
     addSelectedPlayer: (player: Player) => void;
     removeSelectedPlayer: (player: Player) => void;
+
 }

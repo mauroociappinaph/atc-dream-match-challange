@@ -5,7 +5,7 @@ import { PlayerListStore } from "../types/index";
 export const usePlayerListStore = create<PlayerListStore>((set) => ({
     players: [],
     selectedPlayers: [],
-    teams: [], // Agregamos el estado de equipos
+    teams: [],
     searchTerm: "",
     currentPage: 1,
     setPlayers: (players) => set({ players }),
@@ -44,4 +44,5 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
         set((state) => ({
             teams: state.teams.filter((team) => team.id !== teamId),
         })),
+    clearSelectedPlayers: () => set({ selectedPlayers: [] }),
 }));

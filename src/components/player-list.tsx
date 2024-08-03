@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { debounce } from "lodash";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +20,7 @@ export default function PlayerList() {
     setCurrentPage,
     addSelectedPlayer,
     removeSelectedPlayer,
+    clearSelectedPlayers,
   } = usePlayerListStore();
   const playersPerPage = 6;
 
