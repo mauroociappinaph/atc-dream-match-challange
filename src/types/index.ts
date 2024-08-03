@@ -31,3 +31,9 @@ export interface PlayerApi {
 export interface PlayersApiResponse {
     data: PlayerApi[];
 }
+
+export interface Team {
+    id: number;
+    name: string;
+    players: Player[];
+}
