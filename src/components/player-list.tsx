@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { debounce } from "lodash";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,13 +35,15 @@ export default function PlayerList() {
       } catch (error) {
         console.error(error);
       }
-    }, 100),
+    }, 1000), // Cambiado a 1000 ms
     [setPlayers]
   );
 
   useEffect(() => {
     if (searchTerm.trim() !== "") {
       debouncedFetchPlayers(searchTerm);
+    } else {
+      setPlayers([]);
     }
   }, [searchTerm, debouncedFetchPlayers]);
 
@@ -82,7 +84,7 @@ export default function PlayerList() {
         value={searchTerm || ""}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      {players && (
+      {players.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {currentPlayers.map((player) => {
             if (!player) {
