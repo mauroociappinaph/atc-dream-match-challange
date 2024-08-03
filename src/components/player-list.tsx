@@ -35,7 +35,7 @@ export default function PlayerList() {
       } catch (error) {
         console.error(error);
       }
-    }, 500),
+    }, 100),
     [setPlayers]
   );
 
