@@ -26,11 +26,19 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
         })),
     addTeam: (team: Team) =>
         set((state) => {
+            if (state.teams === null) {
+                throw new Error("Teams state is null");
+            }
+
             if (state.teams.length >= 2) {
                 alert("You can only create a maximum of two teams.");
                 return state;
             }
-            return { teams: [...state.teams, team], selectedPlayers: [] }; // Clear selected players after adding a team
+
+            return {
+                teams: [...state.teams, team],
+                selectedPlayers: [],
+            };
         }),
     removeTeam: (teamId: number) =>
         set((state) => ({
