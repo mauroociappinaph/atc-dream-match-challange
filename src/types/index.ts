@@ -17,3 +17,17 @@ export interface PlayerListStore {
     removeSelectedPlayer: (player: Player) => void;
 
 }
+
+
+export interface PlayerApi {
+    player_id: number;
+    player_name: string;
+    player_type: string;
+    player_image: string;
+    [key: string]: any;
+}
+
+
+export interface PlayersApiResponse {
+    data: PlayerApi[];
+}

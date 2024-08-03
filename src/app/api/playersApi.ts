@@ -1,32 +1,28 @@
-// src/api/playersApi.js
+// src/api/playersApi.ts
 import axiosClient from './axiosClient';
+import { PlayerApi, PlayersApiResponse } from "../../../src/types/index";
+
+// Definir la interfaz para el tipo de jugador
 
 const playersApi = {
-    async getPlayers(playerName = '') {
+    async getPlayers(playerName: string = ''): Promise<PlayerApi[]> {
         try {
             console.log('getPlayers: playerName =', playerName);
 
-            const response = await axiosClient.get('', {
+            const response = await axiosClient.get<PlayersApiResponse>('', {
                 params: {
                     action: 'get_players',
                     player_name: playerName
                 }
             });
-            console.log('getPlayers: response =', response);
 
-            if (Array.isArray(response.data)) {
-                const uniquePlayers = new Map();
-                response.data.forEach(player => {
-                    console.log('getPlayers: player =', player);
-                    if (player.player_image && player.player_image.trim() !== '' && !uniquePlayers.has(player.player_id)) {
-                        uniquePlayers.set(player.player_id, player);
-                    }
-                });
-                const players = Array.from(uniquePlayers.values()); // Return unique players
-                console.log('getPlayers: players =', players);
-                return players;
+            const uniquePlayers = new Map<number, PlayerApi>();
+            for (const player of response.data) {
+                if (player.player_image && player.player_image.trim() !== '') {
+                    uniquePlayers.set(player.player_id, player);
+                }
             }
-            return [];
+            return Array.from(uniquePlayers.values());
         } catch (error) {
             console.error('getPlayers: error =', error);
             return [];
