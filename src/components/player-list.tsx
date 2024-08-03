@@ -119,7 +119,7 @@ export default function PlayerList() {
           })}
         </div>
       )}
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-center items-center mt-4">
         <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
           Anterior
         </Button>
