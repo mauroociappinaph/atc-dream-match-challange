@@ -22,6 +22,14 @@ import { Button } from "@/components/ui/button";
 import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
 import { Player, Team } from "@/types/index";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function TeamForm() {
   const {
@@ -34,6 +42,9 @@ export default function TeamForm() {
   } = usePlayerListStore();
 
   const [teamName, setTeamName] = useState("");
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -67,7 +78,10 @@ export default function TeamForm() {
 
   const handleSaveChanges = () => {
     if (teamName.trim() === "" || selectedPlayers.length === 0) {
-      alert("Please enter a team name and select at least one player.");
+      setErrorMessage(
+        "Please enter a team name and select at least one player."
+      );
+      setShowErrorDialog(true);
       return;
     }
 
@@ -80,72 +94,82 @@ export default function TeamForm() {
     addTeam(newTeam);
 
     setTeamName("");
-    alert("Team saved successfully!");
+    setShowSuccessDialog(true);
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Crea tu equipo</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="teamName">Nombre del Equipo</Label>
-            <Input
-              id="teamName"
-              value={teamName}
-              onChange={handleTeamNameChange}
-              placeholder="Ingrese nombre del equipo"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Jugadores Seleccionados</Label>
-            <div className="flex items-center justify-between">
-              <Select
-                onValueChange={(value) => handlePlayerSelect(parseInt(value))}
-                className="w-full"
-              >
-                <SelectContent>
-                  <SelectGroup>
-                    {players.map((player) => (
-                      <SelectItem
-                        key={player.player_id}
-                        value={player.player_id.toString()}
-                      >
-                        {player.player_name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Crea tu equipo</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="teamName">Nombre del Equipo</Label>
+              <Input
+                id="teamName"
+                value={teamName}
+                onChange={handleTeamNameChange}
+                placeholder="Ingrese nombre del equipo"
+              />
             </div>
-            <div className="grid items-center justify-between">
-              <div className="flex w-full gap-2">
-                {selectedPlayers.map((player) => (
-                  <div
-                    key={player.player_id}
-                    className="flex items-center gap-2 bg-muted px-2 py-1 rounded-md"
-                  >
-                    {player.player_name}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handlePlayerRemove(player.player_id)}
+            <div className="space-y-2">
+              <Label>Jugadores Seleccionados</Label>
+
+              <div className="grid items-center justify-between">
+                <div className="flex w-full gap-2">
+                  {selectedPlayers.map((player) => (
+                    <div
+                      key={player.player_id}
+                      className="flex items-center gap-2 bg-muted px-2 py-1 rounded-md"
                     >
-                      <XIcon className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
+                      {player.player_name}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handlePlayerRemove(player.player_id)}
+                      >
+                        <XIcon className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-end gap-2">
-        <Button onClick={handleSaveChanges}>Crea tu equipo</Button>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="flex justify-end gap-2">
+          <Button onClick={handleSaveChanges}>Crea tu equipo</Button>
+        </CardFooter>
+      </Card>
+
+      {/* Error Dialog */}
+      <Dialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Error</DialogTitle>
+            <DialogDescription>{errorMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowErrorDialog(false)}>Cerrar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Success</DialogTitle>
+            <DialogDescription>Equipo creado exitosamente.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowSuccessDialog(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

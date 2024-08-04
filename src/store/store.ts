@@ -31,7 +31,7 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             }
 
             if (state.teams.length >= 2) {
-                alert("You can only create a maximum of two teams.");
+                alert("Solo Puedes crear dos equipos");
                 return state;
             }
 
