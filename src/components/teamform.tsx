@@ -73,7 +73,7 @@ export default function TeamForm() {
   const handleSaveChanges = () => {
     if (teamName.trim() === "" || selectedPlayers.length === 0) {
       setErrorMessage(
-        "Please enter a team name and select at least one player."
+        "Por favor, ingresa un nombre de equipo y selecciona al menos 5 jugadores."
       );
       setShowErrorDialog(true);
       return;
