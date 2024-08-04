@@ -100,7 +100,7 @@ export default function TeamForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label>Jugadores</Label>
+            <Label>Jugadores Seleccionados</Label>
             <div className="flex items-center justify-between">
               <Select
                 onValueChange={(value) => handlePlayerSelect(parseInt(value))}
@@ -141,16 +141,7 @@ export default function TeamForm() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button
-          variant="outline"
-          onClick={() => {
-            setTeamName("");
-            setPlayers([]);
-          }}
-        >
-          Cancel
-        </Button>
-        <Button onClick={handleSaveChanges}>Save Changes</Button>
+        <Button onClick={handleSaveChanges}>Crea tu equipo</Button>
       </CardFooter>
     </Card>
   );
