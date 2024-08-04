@@ -18,13 +18,17 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input"; // Importar el componente Input
 import { usePlayerListStore } from "@/store/store";
 import { Team } from "@/types/index";
 
 export default function TeamList() {
-  const { teams, removeTeam } = usePlayerListStore();
+  const { teams, removeTeam, updateTeam } = usePlayerListStore(); // Añadir updateTeam
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false); // Estado para el diálogo de edición
   const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
+  const [teamToEdit, setTeamToEdit] = useState<Team | null>(null); // Estado para el equipo a editar
+  const [newTeamName, setNewTeamName] = useState(""); // Estado para el nuevo nombre del equipo
 
   const handleDelete = (team: Team) => {
     setTeamToDelete(team);
@@ -44,8 +48,33 @@ export default function TeamList() {
     setTeamToDelete(null);
   };
 
+  const handleEdit = (team: Team) => {
+    setTeamToEdit(team);
+    setNewTeamName(team.name);
+    setShowEditDialog(true);
+  };
+
+  const saveEdit = () => {
+    if (teamToEdit) {
+      const updatedTeam = {
+        ...teamToEdit,
+        name: newTeamName,
+      };
+      updateTeam(updatedTeam); // Actualizar el equipo
+      setShowEditDialog(false);
+      setTeamToEdit(null);
+      setNewTeamName("");
+    }
+  };
+
+  const cancelEdit = () => {
+    setShowEditDialog(false);
+    setTeamToEdit(null);
+    setNewTeamName("");
+  };
+
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center ">
       <h1 className="text-2xl font-bold mb-4">Team List</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {teams.map((team) => (
@@ -68,11 +97,12 @@ export default function TeamList() {
               </div>
             </CardContent>
             <CardFooter className="flex items-center justify-between">
-              <Button variant="outline" size="sm">
-                View
-              </Button>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleEdit(team)}
+                >
                   Edit
                 </Button>
                 <Button
@@ -102,6 +132,31 @@ export default function TeamList() {
                 </Button>
                 <Button variant="destructive" onClick={confirmDelete}>
                   Delete
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+        {showEditDialog && (
+          <Dialog open={showEditDialog}>
+            <DialogContent className="p-6 grid gap-4">
+              <DialogHeader>
+                <DialogTitle>Edit Team</DialogTitle>
+                <DialogDescription>Edit the team name.</DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col gap-2">
+                <Input
+                  value={newTeamName}
+                  onChange={(e) => setNewTeamName(e.target.value)}
+                  placeholder="Team Name"
+                />
+              </div>
+              <div className="flex items-center justify-end gap-2">
+                <Button variant="outline" onClick={cancelEdit}>
+                  Cancel
+                </Button>
+                <Button variant="primary" onClick={saveEdit}>
+                  Save
                 </Button>
               </div>
             </DialogContent>

@@ -120,22 +120,24 @@ export default function TeamForm() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex gap-2">
-              {selectedPlayers.map((player) => (
-                <div
-                  key={player.player_id}
-                  className="flex items-center gap-2 bg-muted px-2 py-1 rounded-md"
-                >
-                  {player.player_name}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handlePlayerRemove(player.player_id)}
+            <div className="grid items-center justify-between">
+              <div className="flex w-full gap-2">
+                {selectedPlayers.map((player) => (
+                  <div
+                    key={player.player_id}
+                    className="flex items-center gap-2 bg-muted px-2 py-1 rounded-md"
                   >
-                    <XIcon className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
+                    {player.player_name}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handlePlayerRemove(player.player_id)}
+                    >
+                      <XIcon className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

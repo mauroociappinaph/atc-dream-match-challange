@@ -78,7 +78,7 @@ export default function PlayerList() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center p-4">
       <Input
         type="text"
         placeholder="Buscar jugador"

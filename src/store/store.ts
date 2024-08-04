@@ -45,4 +45,9 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             teams: state.teams.filter((team) => team.id !== teamId),
         })),
     clearSelectedPlayers: () => set({ selectedPlayers: [] }),
+    updateTeam: (updatedTeam) => set((state) => ({
+        teams: state.teams.map((team) =>
+            team.id === updatedTeam.id ? updatedTeam : team
+        ),
+    })),
 }));
