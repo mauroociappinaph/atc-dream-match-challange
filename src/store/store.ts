@@ -1,6 +1,5 @@
-// src/store/store.ts
 import create from "zustand";
-import { PlayerListStore } from "../types/index";
+import { Player, Team, PlayerListStore } from "../types/index"; // Asegúrate de importar Player y Team
 
 export const usePlayerListStore = create<PlayerListStore>((set) => ({
     players: [],
@@ -8,10 +7,10 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
     teams: [],
     searchTerm: "",
     currentPage: 1,
-    setPlayers: (players) => set({ players }),
-    setSearchTerm: (term) => set({ searchTerm: term }),
-    setCurrentPage: (page) => set({ currentPage: page }),
-    addSelectedPlayer: (player) =>
+    setPlayers: (players: Player[]) => set({ players }),
+    setSearchTerm: (term: string) => set({ searchTerm: term }),
+    setCurrentPage: (page: number) => set({ currentPage: page }),
+    addSelectedPlayer: (player: Player) =>
         set((state) => {
             if (state.selectedPlayers.length >= 5) {
                 return state;
@@ -20,9 +19,9 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
                 selectedPlayers: [...state.selectedPlayers, player],
             };
         }),
-    removeSelectedPlayer: (player) =>
+    removeSelectedPlayer: (playerId: number) =>
         set((state) => ({
-            selectedPlayers: state.selectedPlayers.filter((p) => p !== player),
+            selectedPlayers: state.selectedPlayers.filter((p) => p.player_id !== playerId),
         })),
     addTeam: (team: Team) =>
         set((state) => {
@@ -31,7 +30,12 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             }
 
             if (state.teams.length >= 2) {
-                alert("Solo Puedes crear dos equipos");
+                console.error("Solo Puedes crear dos equipos");
+                return state;
+            }
+
+            if (team.players.length < 5) {
+                console.error("Un equipo debe tener al menos 5 jugadores");
                 return state;
             }
 
@@ -45,7 +49,7 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             teams: state.teams.filter((team) => team.id !== teamId),
         })),
     clearSelectedPlayers: () => set({ selectedPlayers: [] }),
-    updateTeam: (updatedTeam) => set((state) => ({
+    updateTeam: (updatedTeam: Team) => set((state) => ({
         teams: state.teams.map((team) =>
             team.id === updatedTeam.id ? updatedTeam : team
         ),

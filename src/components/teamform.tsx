@@ -10,14 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
@@ -45,6 +37,8 @@ export default function TeamForm() {
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showPlayerCountErrorDialog, setShowPlayerCountErrorDialog] =
+    useState(false);
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -82,6 +76,11 @@ export default function TeamForm() {
         "Please enter a team name and select at least one player."
       );
       setShowErrorDialog(true);
+      return;
+    }
+
+    if (selectedPlayers.length < 5) {
+      setShowPlayerCountErrorDialog(true);
       return;
     }
 
@@ -157,6 +156,26 @@ export default function TeamForm() {
         </DialogContent>
       </Dialog>
 
+      {/* Player Count Error Dialog */}
+      <Dialog
+        open={showPlayerCountErrorDialog}
+        onOpenChange={setShowPlayerCountErrorDialog}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Error</DialogTitle>
+            <DialogDescription>
+              Un equipo debe tener al menos 5 jugadores.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowPlayerCountErrorDialog(false)}>
+              Cerrar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Success Dialog */}
       <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
         <DialogContent>
@@ -165,7 +184,7 @@ export default function TeamForm() {
             <DialogDescription>Equipo creado exitosamente.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setShowSuccessDialog(false)}>Close</Button>
+            <Button onClick={() => setShowSuccessDialog(false)}>Cerrar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
