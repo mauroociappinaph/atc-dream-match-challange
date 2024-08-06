@@ -1,10 +1,6 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
-
-interface PlayerSearchProps {
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-}
+import { PlayerSearchProps } from "@/types/index";
 
 const PlayerSearch: React.FC<PlayerSearchProps> = ({
   searchTerm,

@@ -1,12 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-
-interface PlayerPaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPreviousPage: () => void;
-  onNextPage: () => void;
-}
+import { PlayerPaginationProps } from "@/types/index";
 
 const PlayerPagination: React.FC<PlayerPaginationProps> = ({
   currentPage,

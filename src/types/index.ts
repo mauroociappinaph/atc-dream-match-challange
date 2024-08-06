@@ -37,3 +37,21 @@ export interface Team {
     name: string;
     players: Player[];
 }
+
+export interface PlayerPaginationProps {
+    currentPage: number;
+    totalPages: number;
+    onPreviousPage: () => void;
+    onNextPage: () => void;
+}
+
+export interface PlayerSearchProps {
+    searchTerm: string;
+    onSearchChange: (term: string) => void;
+}
+
+export interface PlayerCardProps {
+    player: Player;
+    isSelected: boolean;
+    onSelect: (player: Player) => void;
+}

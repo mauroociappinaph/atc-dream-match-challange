@@ -1,13 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Player } from "@/types/index";
-
-interface PlayerCardProps {
-  player: Player;
-  isSelected: boolean;
-  onSelect: (player: Player) => void;
-}
+import { PlayerCardProps } from "@/types/index";
 
 const PlayerCard: React.FC<PlayerCardProps> = ({
   player,
