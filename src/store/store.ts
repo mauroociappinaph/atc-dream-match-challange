@@ -2,9 +2,9 @@ import create from "zustand";
 import { Player, Team, PlayerListStore } from "../types/index"; // Asegúrate de importar Player y Team
 
 export const usePlayerListStore = create<PlayerListStore>((set) => ({
-    players: [],
-    selectedPlayers: [],
-    teams: [],
+    players: [] as Player[],
+    selectedPlayers: [] as Player[],
+    teams: [] as Team[],
     searchTerm: "",
     currentPage: 1,
     setPlayers: (players: Player[]) => set({ players }),
@@ -29,10 +29,6 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
         })),
     addTeam: (team: Team) =>
         set((state) => {
-            if (state.teams === null) {
-                throw new Error("Teams state is null");
-            }
-
             if (state.teams.length >= 2) {
                 console.error("Solo Puedes crear dos equipos");
                 return state;
@@ -53,9 +49,29 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             teams: state.teams.filter((team) => team.id !== teamId),
         })),
     clearSelectedPlayers: () => set({ selectedPlayers: [] }),
-    updateTeam: (updatedTeam: Team) => set((state) => ({
-        teams: state.teams.map((team) =>
-            team.id === updatedTeam.id ? updatedTeam : team
-        ),
-    })),
+    updateTeam: (updatedTeam: Team) =>
+        set((state) => ({
+            teams: state.teams.map((team) =>
+                team.id === updatedTeam.id ? updatedTeam : team
+            ),
+        })),
+    deletePlayerOfSelectedPlayer: (playerId: number) =>
+        set((state) => ({
+            selectedPlayers: state.selectedPlayers.filter((player) => player.player_id !== playerId),
+        })),
+    replacePlayerInTeam: (teamId: number, oldPlayer: string, newPlayer: Player) =>
+        set((state) => ({
+            teams: state.teams.map(team => {
+                if (team.id === teamId) {
+                    return {
+                        ...team,
+                        players: team.players.map(player =>
+                            player === oldPlayer ? newPlayer.player_name : player
+                        ),
+                    };
+                }
+                return team;
+            }),
+            selectedPlayers: [...state.selectedPlayers.filter(p => p.player_name !== oldPlayer), newPlayer],
+        })),
 }));

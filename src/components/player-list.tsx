@@ -2,9 +2,6 @@
 
 import React, { useEffect, useCallback, useState } from "react";
 import { debounce } from "lodash";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
 import { Player } from "@/types/index";
@@ -17,6 +14,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import PlayerCard from "../components/player-card";
+import PlayerSearch from "../components/player-search";
+import PlayerPagination from "../components/player-pagination";
 
 export default function PlayerList() {
   const {
@@ -103,12 +103,7 @@ export default function PlayerList() {
 
   return (
     <div className="flex flex-col justify-center items-center p-4">
-      <Input
-        type="text"
-        placeholder="Buscar jugador"
-        value={searchTerm || ""}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <PlayerSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       {isLoading ? (
         <LoadingSpinner />
       ) : (
@@ -119,47 +114,25 @@ export default function PlayerList() {
                 if (!player) {
                   return null;
                 }
-                const { player_id, player_name, player_type, player_image } =
-                  player;
                 return (
-                  <React.Fragment key={player_id}>
-                    <Card className="player-card">
-                      <CardContent>
-                        <img
-                          src={player_image}
-                          alt={player_name}
-                          className="player-image"
-                        />
-                        <h2 className="player-name">{player_name}</h2>
-                        <p className="player-position">{player_type}</p>
-                        <Button
-                          onClick={() => handlePlayerSelect(player)}
-                          className="player-button"
-                        >
-                          {selectedPlayers.some(
-                            (p) => p.player_id === player.player_id
-                          )
-                            ? "Deseleccionar"
-                            : "Seleccionar"}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </React.Fragment>
+                  <PlayerCard
+                    key={player.player_id}
+                    player={player}
+                    isSelected={selectedPlayers.some(
+                      (p) => p.player_id === player.player_id
+                    )}
+                    onSelect={handlePlayerSelect}
+                  />
                 );
               })}
             </div>
           )}
-          <div className="flex justify-center items-center mt-4">
-            <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
-              Anterior
-            </Button>
-            <Button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages || totalPages === 0}
-            >
-              Siguiente
-            </Button>
-          </div>
+          <PlayerPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPreviousPage={handlePreviousPage}
+            onNextPage={handleNextPage}
+          />
         </>
       )}
 

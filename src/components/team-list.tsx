@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -17,25 +17,52 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input"; // Importar el componente Input
+import { Input } from "@/components/ui/input";
 import { usePlayerListStore } from "@/store/store";
-import { Team } from "@/types/index";
+import { Team, Player } from "@/types/index";
 
 export default function TeamList() {
-  const { teams, removeTeam, updateTeam } = usePlayerListStore(); // Añadir updateTeam
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showEditDialog, setShowEditDialog] = useState(false); // Estado para el diálogo de edición
-  const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
-  const [teamToEdit, setTeamToEdit] = useState<Team | null>(null); // Estado para el equipo a editar
-  const [newTeamName, setNewTeamName] = useState(""); // Estado para el nuevo nombre del equipo
+  const {
+    teams,
+    removeTeam,
+    updateTeam,
+    deletePlayerOfSelectedPlayer,
+    replacePlayerInTeam,
+    players,
+    setPlayers,
+  } = usePlayerListStore();
 
-  const handleDelete = (team: Team) => {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showReplaceDialog, setShowReplaceDialog] = useState(false);
+  const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
+  const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
+  const [playerToReplace, setPlayerToReplace] = useState<string | null>(null);
+  const [newTeamName, setNewTeamName] = useState("");
+  const [selectedReplacementPlayer, setSelectedReplacementPlayer] =
+    useState<Player | null>(null);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const playersData = await playersApi.getPlayers();
+        setPlayers(playersData);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      }
+    };
+
+    fetchPlayers();
+  }, [setPlayers]);
+
+  const handleDeleteTeam = (team: Team) => {
     setTeamToDelete(team);
     setShowDeleteConfirmation(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDeleteTeam = () => {
     if (teamToDelete) {
       removeTeam(teamToDelete.id);
       setShowDeleteConfirmation(false);
@@ -43,7 +70,7 @@ export default function TeamList() {
     }
   };
 
-  const cancelDelete = () => {
+  const cancelDeleteTeam = () => {
     setShowDeleteConfirmation(false);
     setTeamToDelete(null);
   };
@@ -60,7 +87,7 @@ export default function TeamList() {
         ...teamToEdit,
         name: newTeamName,
       };
-      updateTeam(updatedTeam); // Actualizar el equipo
+      updateTeam(updatedTeam);
       setShowEditDialog(false);
       setTeamToEdit(null);
       setNewTeamName("");
@@ -71,6 +98,51 @@ export default function TeamList() {
     setShowEditDialog(false);
     setTeamToEdit(null);
     setNewTeamName("");
+  };
+
+  const handleDeletePlayer = (team: Team, player: string) => {
+    setTeamToEdit(team);
+    setPlayerToReplace(player);
+    setShowReplaceDialog(true);
+  };
+
+  const confirmReplacePlayer = () => {
+    if (teamToEdit && playerToReplace && selectedReplacementPlayer) {
+      replacePlayerInTeam(
+        teamToEdit.id,
+        playerToReplace,
+        selectedReplacementPlayer
+      );
+      setShowReplaceDialog(false);
+      setTeamToEdit(null);
+      setPlayerToReplace(null);
+      setSelectedReplacementPlayer(null);
+    }
+  };
+
+  const confirmDeletePlayer = () => {
+    if (teamToEdit && playerToReplace) {
+      const updatedTeam = {
+        ...teamToEdit,
+        players: teamToEdit.players.filter((p) => p !== playerToReplace),
+      };
+      updateTeam(updatedTeam);
+      deletePlayerOfSelectedPlayer(
+        teams.flatMap((t) => t.players).find((p) => p === playerToReplace)
+          ?.player_id ?? 0
+      );
+      setShowReplaceDialog(false);
+      setTeamToEdit(null);
+      setPlayerToReplace(null);
+      setSelectedReplacementPlayer(null);
+    }
+  };
+
+  const cancelReplacePlayer = () => {
+    setShowReplaceDialog(false);
+    setTeamToEdit(null);
+    setPlayerToReplace(null);
+    setSelectedReplacementPlayer(null);
   };
 
   return (
@@ -92,6 +164,13 @@ export default function TeamList() {
                       <AvatarFallback>{player.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <span>{player}</span>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeletePlayer(team, player)}
+                    >
+                      Delete
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -108,7 +187,7 @@ export default function TeamList() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => handleDelete(team)}
+                  onClick={() => handleDeleteTeam(team)}
                 >
                   Delete
                 </Button>
@@ -127,10 +206,10 @@ export default function TeamList() {
                 </DialogDescription>
               </DialogHeader>
               <div className="flex items-center justify-end gap-2">
-                <Button variant="outline" onClick={cancelDelete}>
+                <Button variant="outline" onClick={cancelDeleteTeam}>
                   Cancel
                 </Button>
-                <Button variant="destructive" onClick={confirmDelete}>
+                <Button variant="destructive" onClick={confirmDeleteTeam}>
                   Delete
                 </Button>
               </div>
@@ -157,6 +236,48 @@ export default function TeamList() {
                 </Button>
                 <Button variant="primary" onClick={saveEdit}>
                   Save
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+        {showReplaceDialog && (
+          <Dialog open={showReplaceDialog}>
+            <DialogContent className="p-6 grid gap-4">
+              <DialogHeader>
+                <DialogTitle>Replace Player</DialogTitle>
+                <DialogDescription>
+                  {`Replace the player "${playerToReplace}" or confirm deletion.`}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col gap-2">
+                <select
+                  onChange={(e) => {
+                    const player = players.find(
+                      (p) => p.player_id === Number(e.target.value)
+                    );
+                    setSelectedReplacementPlayer(player || null);
+                  }}
+                  value={selectedReplacementPlayer?.player_id || ""}
+                  className="p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select Replacement Player</option>
+                  {players.map((player) => (
+                    <option key={player.player_id} value={player.player_id}>
+                      {player.player_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center justify-end gap-2">
+                <Button variant="outline" onClick={cancelReplacePlayer}>
+                  Cancel
+                </Button>
+                <Button variant="primary" onClick={confirmReplacePlayer}>
+                  Replace
+                </Button>
+                <Button variant="destructive" onClick={confirmDeletePlayer}>
+                  Delete
                 </Button>
               </div>
             </DialogContent>
