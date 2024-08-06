@@ -65,7 +65,7 @@ export default function PlayerList() {
 
   return (
     <div className="flex flex-col justify-center items-center p-4">
-      <h1 className="text-2xl font-bold mb-4">Arma tu equipo</h1>
+      <h1 className="text-2xl font-bold mb-4">Elegí tus jugadores</h1>
       <PlayerSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       {isLoading ? (
         <LoadingSpinner />
