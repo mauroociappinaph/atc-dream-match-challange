@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -17,12 +17,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import Select from "react-select"; // Import the react-select component
+import Select from "react-select";
 import { usePlayerListStore } from "@/store/store";
-import { Team, Player } from "@/types/index";
+
 import playersApi from "@/app/api/playersApi";
 import { useTeamListHandlers } from "@/handlers/TeamListHandlers";
 
@@ -71,7 +70,7 @@ export default function TeamList() {
   }, [setPlayers]);
 
   return (
-    <div className="flex flex-col justify-center items-center ">
+    <div className="flex flex-col justify-center items-center">
       <h1 className="text-2xl font-bold mb-4">Team List</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         {teams.map((team) => (
@@ -94,7 +93,7 @@ export default function TeamList() {
                       size="sm"
                       onClick={() => handleDeletePlayer(team, player)}
                     >
-                      Delete
+                      Editar
                     </Button>
                   </div>
                 ))}
@@ -107,7 +106,7 @@ export default function TeamList() {
                   size="sm"
                   onClick={() => handleEdit(team)}
                 >
-                  Editar
+                  Editar Nombre del Equipo
                 </Button>
                 <Button
                   variant="destructive"
@@ -127,15 +126,15 @@ export default function TeamList() {
           >
             <DialogContent className="p-6 grid gap-4">
               <DialogHeader>
-                <DialogTitle>Delete Team</DialogTitle>
+                <DialogTitle>Borrar Equipo</DialogTitle>
                 <DialogDescription>
-                  Are you sure you want to delete the team "{teamToDelete?.name}
-                  "?
+                  ¿Estás seguro que quieres borrar el equipo "
+                  {teamToDelete?.name}"?
                 </DialogDescription>
               </DialogHeader>
               <div className="flex items-center justify-end gap-2">
                 <Button variant="outline" onClick={cancelDeleteTeam}>
-                  Cancel
+                  Cancelar
                 </Button>
                 <Button variant="destructive" onClick={confirmDeleteTeam}>
                   Borrar
@@ -175,7 +174,7 @@ export default function TeamList() {
           <Dialog open={showReplaceDialog} onOpenChange={setShowReplaceDialog}>
             <DialogContent className="p-6 grid gap-4">
               <DialogHeader>
-                <DialogTitle>Remplazar Jugador</DialogTitle>
+                <DialogTitle>Remplazar Jugador o Eliminar Jugador</DialogTitle>
                 <DialogDescription>
                   {`Selecciona un nuevo jugador para reemplazar a ${playerToDelete}`}
                 </DialogDescription>

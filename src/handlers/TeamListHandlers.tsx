@@ -22,6 +22,7 @@ export const useTeamListHandlers = () => {
   const [selectedReplacementPlayer, setSelectedReplacementPlayer] =
     useState<Player | null>(null);
 
+  // Handlers for deleting a team
   const handleDeleteTeam = (team: Team) => {
     setTeamToDelete(team);
     setShowDeleteConfirmation(true);
@@ -40,6 +41,7 @@ export const useTeamListHandlers = () => {
     setTeamToDelete(null);
   };
 
+  // Handlers for editing a team
   const handleEdit = (team: Team) => {
     setTeamToEdit(team);
     setNewTeamName(team.name);
@@ -65,24 +67,11 @@ export const useTeamListHandlers = () => {
     setNewTeamName("");
   };
 
+  // Handlers for deleting a player
   const handleDeletePlayer = (team: Team, player: string) => {
     setTeamToEdit(team);
     setPlayerToDelete(player);
     setShowReplaceDialog(true);
-  };
-
-  const confirmReplacePlayer = () => {
-    if (teamToEdit && playerToDelete && selectedReplacementPlayer) {
-      replacePlayerInTeam(
-        teamToEdit.id,
-        playerToDelete,
-        selectedReplacementPlayer
-      );
-      setShowReplaceDialog(false);
-      setTeamToEdit(null);
-      setPlayerToDelete(null);
-      setSelectedReplacementPlayer(null);
-    }
   };
 
   const confirmDeletePlayer = () => {
@@ -107,6 +96,21 @@ export const useTeamListHandlers = () => {
     setTeamToEdit(null);
     setPlayerToDelete(null);
     setSelectedReplacementPlayer(null);
+  };
+
+  // Handlers for replacing a player
+  const confirmReplacePlayer = () => {
+    if (teamToEdit && playerToDelete && selectedReplacementPlayer) {
+      replacePlayerInTeam(
+        teamToEdit.id,
+        playerToDelete,
+        selectedReplacementPlayer
+      );
+      setShowReplaceDialog(false);
+      setTeamToEdit(null);
+      setPlayerToDelete(null);
+      setSelectedReplacementPlayer(null);
+    }
   };
 
   const playerOptions = players.map((player) => ({
