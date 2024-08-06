@@ -44,7 +44,7 @@ export default function PlayerList() {
     } else {
       setPlayers([]);
     }
-  }, [searchTerm, debouncedFetchPlayers]);
+  }, [searchTerm, debouncedFetchPlayers, setPlayers]);
 
   const indexOfLastPlayer = currentPage * playersPerPage;
   const indexOfFirstPlayer =

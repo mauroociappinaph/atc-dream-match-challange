@@ -73,11 +73,12 @@ body {
 }
 
 .player-card {
-  margin: 1rem;
-  padding: 2rem;
+ 
   background-color: #f5f5f5;
   border-radius: 0.5rem;
   box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.15);
+  text-align: center;
+  
 }
 
 .player-name {
@@ -109,4 +110,7 @@ body {
   width: 100px; 
   height: 100px;
   border-radius: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
