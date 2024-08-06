@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useEffect, useCallback, useState } from "react";
-import { debounce } from "lodash";
-import playersApi from "@/app/api/playersApi";
+import React, { useEffect, useState } from "react";
 import { usePlayerListStore } from "@/store/store";
-import { Player } from "@/types/index";
 import LoadingSpinner from "./ui/loadingspinner";
 import {
   Dialog,
@@ -17,6 +14,8 @@ import {
 import PlayerCard from "../components/player-card";
 import PlayerSearch from "../components/player-search";
 import PlayerPagination from "../components/player-pagination";
+import { usePlayerListHandlers } from "../handlers/PlayerListHandlers";
+import { Button } from "@/components/ui/button";
 
 export default function PlayerList() {
   const {
@@ -24,38 +23,19 @@ export default function PlayerList() {
     selectedPlayers,
     searchTerm,
     currentPage,
-    setPlayers,
     setSearchTerm,
     setCurrentPage,
-    addSelectedPlayer,
-    removeSelectedPlayer,
-    clearSelectedPlayers,
-    teams,
+    setPlayers,
   } = usePlayerListStore();
   const playersPerPage = 6;
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPlayerTakenDialog, setShowPlayerTakenDialog] = useState(false);
-
-  const debouncedFetchPlayers = useCallback(
-    debounce(async (term) => {
-      if (term.trim() === "") {
-        setPlayers([]);
-        setIsLoading(false);
-        return;
-      }
-      setIsLoading(true);
-      try {
-        const playersData = await playersApi.getPlayers(term);
-        setPlayers(playersData || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 1000), // Cambiado a 1000 ms
-    [setPlayers]
-  );
+  const {
+    isLoading,
+    showPlayerTakenDialog,
+    setShowPlayerTakenDialog,
+    debouncedFetchPlayers,
+    handlePlayerSelect,
+  } = usePlayerListHandlers();
 
   useEffect(() => {
     if (searchTerm.trim() !== "") {
@@ -64,24 +44,6 @@ export default function PlayerList() {
       setPlayers([]);
     }
   }, [searchTerm, debouncedFetchPlayers]);
-
-  const handlePlayerSelect = (player: Player) => {
-    const isSelected = selectedPlayers.some(
-      (p) => p.player_id === player.player_id
-    );
-    if (isSelected) {
-      removeSelectedPlayer(player.player_id);
-    } else {
-      const isPlayerInTeams = teams.some((team) =>
-        team.players.includes(player.player_name)
-      );
-      if (isPlayerInTeams) {
-        setShowPlayerTakenDialog(true);
-        return;
-      }
-      addSelectedPlayer(player);
-    }
-  };
 
   const indexOfLastPlayer = currentPage * playersPerPage;
   const indexOfFirstPlayer =

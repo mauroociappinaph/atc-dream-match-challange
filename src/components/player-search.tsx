@@ -1,32 +1,26 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-interface PlayerPaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPreviousPage: () => void;
-  onNextPage: () => void;
+interface PlayerSearchProps {
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
 }
 
-const PlayerPagination: React.FC<PlayerPaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPreviousPage,
-  onNextPage,
+const PlayerSearch: React.FC<PlayerSearchProps> = ({
+  searchTerm,
+  onSearchChange,
 }) => {
   return (
-    <div className="flex justify-center items-center mt-4">
-      <Button onClick={onPreviousPage} disabled={currentPage === 1}>
-        Anterior
-      </Button>
-      <Button
-        onClick={onNextPage}
-        disabled={currentPage === totalPages || totalPages === 0}
-      >
-        Siguiente
-      </Button>
+    <div className="w-full max-w-md mb-4">
+      <Input
+        type="text"
+        placeholder="Buscar jugador"
+        value={searchTerm || ""}
+        onChange={(e) => onSearchChange(e.target.value)}
+        className="w-full"
+      />
     </div>
   );
 };
 
-export default PlayerPagination;
+export default PlayerSearch;
