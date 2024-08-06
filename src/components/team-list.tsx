@@ -71,7 +71,6 @@ export default function TeamList() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <h1 className="text-2xl font-bold mb-4">Team List</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         {teams.map((team) => (
           <Card key={team.id} className="p-4">

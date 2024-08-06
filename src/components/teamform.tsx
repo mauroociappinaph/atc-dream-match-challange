@@ -128,9 +128,6 @@ export default function TeamForm() {
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle>Crea tu equipo</CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             <div className="space-y-2">
