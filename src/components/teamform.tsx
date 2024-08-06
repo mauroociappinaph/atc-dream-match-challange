@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,7 +25,10 @@ export default function TeamForm() {
     addSelectedPlayer,
     removeSelectedPlayer,
     addTeam,
+    clearSelectedPlayers,
     teams,
+    setSearchTerm,
+    setCurrentPage,
   } = usePlayerListStore();
 
   const [teamName, setTeamName] = useState("");
@@ -99,6 +96,13 @@ export default function TeamForm() {
     removeSelectedPlayer(playerId);
   };
 
+  const resetPlayerList = () => {
+    setSearchTerm("");
+    setCurrentPage(1);
+    clearSelectedPlayers();
+    setPlayers([]);
+  };
+
   const handleSaveChanges = () => {
     if (teamName.trim() === "" || selectedPlayers.length === 0) {
       setErrorMessage(
@@ -121,7 +125,9 @@ export default function TeamForm() {
 
     addTeam(newTeam);
 
+    // Clear form and reset player list
     setTeamName("");
+    resetPlayerList();
     setShowSuccessDialog(true);
   };
 
@@ -206,11 +212,31 @@ export default function TeamForm() {
       <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Success</DialogTitle>
+            <DialogTitle>Éxito</DialogTitle>
             <DialogDescription>Equipo creado exitosamente.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button onClick={() => setShowSuccessDialog(false)}>Cerrar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Player Taken Dialog */}
+      <Dialog
+        open={showPlayerTakenDialog}
+        onOpenChange={setShowPlayerTakenDialog}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Jugador Ocupado</DialogTitle>
+            <DialogDescription>
+              Este jugador ya ha sido seleccionado por otro equipo.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowPlayerTakenDialog(false)}>
+              Cerrar
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

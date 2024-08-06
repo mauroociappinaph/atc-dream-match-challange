@@ -26,6 +26,7 @@ export default function PlayerList() {
     setSearchTerm,
     setCurrentPage,
     setPlayers,
+    clearSelectedPlayers,
   } = usePlayerListStore();
   const playersPerPage = 6;
 
@@ -61,6 +62,13 @@ export default function PlayerList() {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
+  };
+
+  const resetPlayerList = () => {
+    setSearchTerm("");
+    setCurrentPage(1);
+    clearSelectedPlayers();
+    setPlayers([]);
   };
 
   return (
