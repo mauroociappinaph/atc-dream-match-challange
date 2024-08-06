@@ -56,11 +56,11 @@ export default function PlayerList() {
   }, [searchTerm, debouncedFetchPlayers]);
 
   const handlePlayerSelect = (player: Player) => {
-    const index = selectedPlayers.findIndex(
+    const isSelected = selectedPlayers.some(
       (p) => p.player_id === player.player_id
     );
-    if (index !== -1) {
-      removeSelectedPlayer(selectedPlayers[index]);
+    if (isSelected) {
+      removeSelectedPlayer(player.player_id);
     } else {
       addSelectedPlayer(player);
     }
@@ -85,7 +85,7 @@ export default function PlayerList() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center  p-4 ">
+    <div className="flex flex-col justify-center items-center p-4">
       <Input
         type="text"
         placeholder="Buscar jugador"
@@ -97,7 +97,7 @@ export default function PlayerList() {
       ) : (
         <>
           {players.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {currentPlayers.map((player) => {
                 if (!player) {
                   return null;
@@ -119,7 +119,9 @@ export default function PlayerList() {
                           onClick={() => handlePlayerSelect(player)}
                           className="player-button"
                         >
-                          {selectedPlayers.includes(player)
+                          {selectedPlayers.some(
+                            (p) => p.player_id === player.player_id
+                          )
                             ? "Deseleccionar"
                             : "Seleccionar"}
                         </Button>
