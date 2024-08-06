@@ -9,6 +9,14 @@ import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
 import { Player } from "@/types/index";
 import LoadingSpinner from "./ui/loadingspinner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function PlayerList() {
   const {
@@ -22,10 +30,12 @@ export default function PlayerList() {
     addSelectedPlayer,
     removeSelectedPlayer,
     clearSelectedPlayers,
+    teams,
   } = usePlayerListStore();
   const playersPerPage = 6;
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showPlayerTakenDialog, setShowPlayerTakenDialog] = useState(false);
 
   const debouncedFetchPlayers = useCallback(
     debounce(async (term) => {
@@ -62,6 +72,13 @@ export default function PlayerList() {
     if (isSelected) {
       removeSelectedPlayer(player.player_id);
     } else {
+      const isPlayerInTeams = teams.some((team) =>
+        team.players.includes(player.player_name)
+      );
+      if (isPlayerInTeams) {
+        setShowPlayerTakenDialog(true);
+        return;
+      }
       addSelectedPlayer(player);
     }
   };
@@ -145,6 +162,26 @@ export default function PlayerList() {
           </div>
         </>
       )}
+
+      {/* Player Taken Error Dialog */}
+      <Dialog
+        open={showPlayerTakenDialog}
+        onOpenChange={setShowPlayerTakenDialog}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Error</DialogTitle>
+            <DialogDescription>
+              Este jugador ya ha sido seleccionado por otro equipo.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowPlayerTakenDialog(false)}>
+              Cerrar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import create from "zustand";
-import { Player, Team, PlayerListStore } from "../types/index";
+import { Player, Team, PlayerListStore } from "../types/index"; // Asegúrate de importar Player y Team
 
 export const usePlayerListStore = create<PlayerListStore>((set) => ({
     players: [],
@@ -13,7 +13,9 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
     addSelectedPlayer: (player: Player) =>
         set((state) => {
             // Verifica si el jugador ya está en alguno de los equipos
-            const isPlayerInTeams = state.teams.some(team => team.players.includes(player.player_name));
+            const isPlayerInTeams = state.teams.some(team =>
+                team.players.includes(player.player_name)
+            );
             if (state.selectedPlayers.length >= 5 || isPlayerInTeams) {
                 return state;
             }
@@ -32,7 +34,7 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             }
 
             if (state.teams.length >= 2) {
-                console.error("Solo puedes crear dos equipos");
+                console.error("Solo Puedes crear dos equipos");
                 return state;
             }
 
@@ -51,10 +53,9 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             teams: state.teams.filter((team) => team.id !== teamId),
         })),
     clearSelectedPlayers: () => set({ selectedPlayers: [] }),
-    updateTeam: (updatedTeam: Team) =>
-        set((state) => ({
-            teams: state.teams.map((team) =>
-                team.id === updatedTeam.id ? updatedTeam : team
-            ),
-        })),
+    updateTeam: (updatedTeam: Team) => set((state) => ({
+        teams: state.teams.map((team) =>
+            team.id === updatedTeam.id ? updatedTeam : team
+        ),
+    })),
 }));

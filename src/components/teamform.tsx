@@ -31,6 +31,7 @@ export default function TeamForm() {
     addSelectedPlayer,
     removeSelectedPlayer,
     addTeam,
+    teams,
   } = usePlayerListStore();
 
   const [teamName, setTeamName] = useState("");
@@ -39,12 +40,15 @@ export default function TeamForm() {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showPlayerCountErrorDialog, setShowPlayerCountErrorDialog] =
     useState(false);
+  const [showPlayerTakenDialog, setShowPlayerTakenDialog] = useState(false);
 
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
         const playersData = await playersApi.getPlayers();
-        setPlayers(playersData);
+        if (playersData) {
+          setPlayers(playersData);
+        }
       } catch (error) {
         console.error("Error fetching players:", error);
       }
@@ -57,11 +61,36 @@ export default function TeamForm() {
     setTeamName(e.target.value);
   };
 
+  const selectedPlayerIsTakenByOtherTeam = (selectedPlayer: Player) => {
+    return teams.some((team) =>
+      team.players.includes(selectedPlayer.player_name)
+    );
+  };
+
   const handlePlayerSelect = (playerId: number) => {
     const selectedPlayer = players.find(
       (player) => player.player_id === playerId
     );
-    if (selectedPlayer && selectedPlayers.length < 5) {
+
+    if (!selectedPlayer) {
+      return;
+    }
+
+    const isSelected = selectedPlayers.some(
+      (player) => player.player_id === playerId
+    );
+
+    if (isSelected) {
+      removeSelectedPlayer(playerId);
+      return;
+    }
+
+    if (selectedPlayerIsTakenByOtherTeam(selectedPlayer)) {
+      setShowPlayerTakenDialog(true);
+      return;
+    }
+
+    if (selectedPlayers.length < 5) {
       addSelectedPlayer(selectedPlayer);
     }
   };
