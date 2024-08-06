@@ -8,7 +8,7 @@ const Card = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col justify-center items-center p-4", className)}
+    className={cn("flex flex-col justify-center items-center ", className)}
     {...props}
   />
 ));

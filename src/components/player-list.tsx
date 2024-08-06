@@ -97,12 +97,14 @@ export default function PlayerList() {
               })}
             </div>
           )}
-          <PlayerPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPreviousPage={handlePreviousPage}
-            onNextPage={handleNextPage}
-          />
+          <div className="flex justify-space-between items-center">
+            <PlayerPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPreviousPage={handlePreviousPage}
+              onNextPage={handleNextPage}
+            />
+          </div>
         </>
       )}
 

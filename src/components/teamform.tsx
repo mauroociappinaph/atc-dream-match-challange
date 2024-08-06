@@ -133,47 +133,45 @@ export default function TeamForm() {
 
   return (
     <>
-      <Card>
-        <CardContent>
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="teamName">Nombre del Equipo</Label>
-              <Input
-                id="teamName"
-                value={teamName}
-                onChange={handleTeamNameChange}
-                placeholder="Ingrese nombre del equipo"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Jugadores Seleccionados</Label>
-
-              <div className="grid items-center justify-between">
-                <div className="flex w-full gap-2">
-                  {selectedPlayers.map((player) => (
-                    <div
-                      key={player.player_id}
-                      className="flex items-center gap-2 bg-muted px-2 py-1 rounded-md"
-                    >
-                      {player.player_name}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handlePlayerRemove(player.player_id)}
-                      >
-                        <XIcon className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
+      <section className="flex flex-col justify-center items-center p-4 m-4 w-full">
+        <div className="flex flex-col lg:flex-row w-full justify-around items-start p-4 space-y-4 lg:space-y-0 lg:space-x-8">
+          <div className="flex flex-col w-full lg:w-1/2 space-y-4">
+            <Label htmlFor="teamName" className="text-center">
+              Nombre del Equipo
+            </Label>
+            <Input
+              id="teamName"
+              value={teamName}
+              onChange={handleTeamNameChange}
+              placeholder="Ingrese nombre del equipo"
+              className="w-full"
+            />
+          </div>
+          <div className="flex flex-col w-full lg:w-1/2 space-y-4">
+            <Label className="text-center">Jugadores Seleccionados</Label>
+            <div className="flex flex-col justify-center items-center w-full gap-2">
+              {selectedPlayers.map((player) => (
+                <div
+                  key={player.player_id}
+                  className="flex items-center gap-2 bg-muted px-2 py-1 rounded-md"
+                >
+                  {player.player_name}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handlePlayerRemove(player.player_id)}
+                  >
+                    <XIcon className="w-4 h-4" />
+                  </Button>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-        </CardContent>
-        <CardFooter className="flex justify-end gap-2">
+        </div>
+        <CardFooter className="flex justify-center w-full gap-2 mt-4">
           <Button onClick={handleSaveChanges}>Crea tu equipo</Button>
         </CardFooter>
-      </Card>
+      </section>
 
       {/* Error Dialog */}
       <Dialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>

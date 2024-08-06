@@ -70,7 +70,7 @@ export default function TeamList() {
   }, [setPlayers]);
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex  justify-center items-center">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         {teams.map((team) => (
           <Card key={team.id} className="p-4">
