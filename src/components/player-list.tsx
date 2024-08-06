@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { usePlayerListStore } from "@/store/store";
 import LoadingSpinner from "./ui/loadingspinner";
 import {
@@ -65,6 +65,7 @@ export default function PlayerList() {
 
   return (
     <div className="flex flex-col justify-center items-center p-4">
+      <h1 className="text-2xl font-bold mb-4">Arma tu equipo</h1>
       <PlayerSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       {isLoading ? (
         <LoadingSpinner />
