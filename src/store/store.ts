@@ -74,4 +74,20 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             }),
             selectedPlayers: [...state.selectedPlayers.filter(p => p.player_name !== oldPlayer), newPlayer],
         })),
+    addAnotherPlayerAfterDelete: (teamId: number, oldPlayer: string, newPlayer: Player) =>
+        set((state) => {
+            const updatedTeams = state.teams.map(team => {
+                if (team.id === teamId) {
+                    return {
+                        ...team,
+                        players: team.players.filter(player => player !== oldPlayer).concat(newPlayer.player_name),
+                    };
+                }
+                return team;
+            });
+            return {
+                teams: updatedTeams,
+                selectedPlayers: state.selectedPlayers.filter(p => p.player_name !== oldPlayer),
+            };
+        }),
 }));
