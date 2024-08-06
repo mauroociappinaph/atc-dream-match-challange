@@ -182,14 +182,14 @@ export default function TeamList() {
                   size="sm"
                   onClick={() => handleEdit(team)}
                 >
-                  Edit
+                  Editar
                 </Button>
                 <Button
                   variant="destructive"
                   size="sm"
                   onClick={() => handleDeleteTeam(team)}
                 >
-                  Delete
+                  Borrar
                 </Button>
               </div>
             </CardFooter>
@@ -210,7 +210,7 @@ export default function TeamList() {
                   Cancel
                 </Button>
                 <Button variant="destructive" onClick={confirmDeleteTeam}>
-                  Delete
+                  Borrar
                 </Button>
               </div>
             </DialogContent>
@@ -220,8 +220,10 @@ export default function TeamList() {
           <Dialog open={showEditDialog}>
             <DialogContent className="p-6 grid gap-4">
               <DialogHeader>
-                <DialogTitle>Edit Team</DialogTitle>
-                <DialogDescription>Edit the team name.</DialogDescription>
+                <DialogTitle>Edita el equipo</DialogTitle>
+                <DialogDescription>
+                  Edita el nombre del equipo.
+                </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col gap-2">
                 <Input
@@ -232,10 +234,10 @@ export default function TeamList() {
               </div>
               <div className="flex items-center justify-end gap-2">
                 <Button variant="outline" onClick={cancelEdit}>
-                  Cancel
+                  Cancelar
                 </Button>
                 <Button variant="primary" onClick={saveEdit}>
-                  Save
+                  Guardar
                 </Button>
               </div>
             </DialogContent>
@@ -245,39 +247,18 @@ export default function TeamList() {
           <Dialog open={showReplaceDialog}>
             <DialogContent className="p-6 grid gap-4">
               <DialogHeader>
-                <DialogTitle>Replace Player</DialogTitle>
+                <DialogTitle>Eliminar Jugador</DialogTitle>
                 <DialogDescription>
-                  {`Replace the player "${playerToReplace}" or confirm deletion.`}
+                  {`Eliminar al jugador ${playerToReplace} ?`}
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex flex-col gap-2">
-                <select
-                  onChange={(e) => {
-                    const player = players.find(
-                      (p) => p.player_id === Number(e.target.value)
-                    );
-                    setSelectedReplacementPlayer(player || null);
-                  }}
-                  value={selectedReplacementPlayer?.player_id || ""}
-                  className="p-2 border border-gray-300 rounded-md"
-                >
-                  <option value="">Select Replacement Player</option>
-                  {players.map((player) => (
-                    <option key={player.player_id} value={player.player_id}>
-                      {player.player_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+
               <div className="flex items-center justify-end gap-2">
                 <Button variant="outline" onClick={cancelReplacePlayer}>
                   Cancel
                 </Button>
-                <Button variant="primary" onClick={confirmReplacePlayer}>
-                  Replace
-                </Button>
                 <Button variant="destructive" onClick={confirmDeletePlayer}>
-                  Delete
+                  Eliminar
                 </Button>
               </div>
             </DialogContent>

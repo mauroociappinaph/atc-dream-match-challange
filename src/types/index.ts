@@ -55,3 +55,4 @@ export interface PlayerCardProps {
     isSelected: boolean;
     onSelect: (player: Player) => void;
 }
+
