@@ -1,5 +1,5 @@
 export interface Player {
-    player_id: string;
+    player_id: number;
     player_name: string;
     player_type: string;
     player_image: string;
@@ -25,7 +25,6 @@ export interface PlayerListStore {
     addAnotherPlayerAfterDelete: (teamId: number, oldPlayer: string, newPlayer: Player) => void;
 }
 
-
 export interface PlayerApi {
     player_id: number;
     player_name: string;
@@ -33,7 +32,6 @@ export interface PlayerApi {
     player_image: string;
     [key: string]: any;
 }
-
 
 export interface PlayersApiResponse {
     data: PlayerApi[];
@@ -67,4 +65,3 @@ export interface PlayerOption {
     value: number;
     label: string;
 }
-

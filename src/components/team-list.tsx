@@ -20,7 +20,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import Select from "react-select";
 import { usePlayerListStore } from "@/store/store";
 import playersApi from "@/app/api/playersApi";
 import { useTeamListHandlers } from "@/handlers/TeamListHandlers";
@@ -54,14 +53,26 @@ export default function TeamList() {
   } = useTeamListHandlers();
 
   useEffect(() => {
+<<<<<<<<<<<<<<  ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>>
     const fetchPlayers = async () => {
       try {
+        if (playersApi) {
+          const playersData = await playersApi.getPlayers();
+          if (playersData) {
+            setPlayers(playersData);
+          } else {
+            console.error("Error fetching players: received null data");
+          }
+        } else {
+          console.error("Error fetching players: playersApi is null");
+        }
         const playersData = await playersApi.getPlayers();
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);
       }
     };
+<<<<<<<  4b5eb72b-68d6-4037-b573-f207c9a10393  >>>>>>>
 
     fetchPlayers();
   }, [setPlayers]);

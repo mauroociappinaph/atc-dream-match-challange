@@ -21,7 +21,7 @@ const playersApi = {
             for (const player of response.data.data) {
                 if (player.player_image && player.player_image.trim() !== '') {
                     uniquePlayers.set(player.player_id, {
-                        player_id: player.player_id.toString(),
+                        player_id: player.player_id,
                         player_name: player.player_name,
                         player_type: player.player_type,
                         player_image: player.player_image
