@@ -5,18 +5,26 @@ import { usePlayerListStore } from "@/store/store";
 import { Player, PlayerOption, Team } from "@/types/index";
 
 export const useTeamListHandlers = () => {
-  const { setPlayers, players, teams } = usePlayerListStore();
+  const {
+    setPlayers,
+    players,
+    teams,
+    addSelectedPlayer,
+    removeSelectedPlayer,
+  } = usePlayerListStore();
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showReplaceDialog, setShowReplaceDialog] = useState(false);
+  const [showPlayerTakenDialog, setShowPlayerTakenDialog] = useState(false);
   const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
   const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
-  const [playerToDelete, setPlayerToDelete] = useState<string | null>(null);
+  const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
   const [newTeamName, setNewTeamName] = useState("");
   const [selectedReplacementPlayer, setSelectedReplacementPlayer] =
     useState<PlayerOption | null>(null);
   const [playerOptions, setPlayerOptions] = useState<PlayerOption[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setPlayerOptions(
@@ -56,7 +64,7 @@ export const useTeamListHandlers = () => {
     setShowEditDialog(false);
   }, []);
 
-  const handleDeletePlayer = useCallback((team: Team, player: string) => {
+  const handleDeletePlayer = useCallback((team: Team, player: Player) => {
     setPlayerToDelete(player);
     setShowReplaceDialog(true);
   }, []);
@@ -67,9 +75,16 @@ export const useTeamListHandlers = () => {
   }, []);
 
   const confirmDeletePlayer = useCallback(() => {
-    // Lógica para eliminar el jugador
-    setShowReplaceDialog(false);
-  }, []);
+    if (playerToDelete && teamToEdit) {
+      // Lógica para eliminar el jugador
+      teamToEdit.players = teamToEdit.players.filter(
+        (player) => player.player_id !== playerToDelete.player_id
+      );
+      setShowReplaceDialog(false);
+      setPlayerToDelete(null);
+      setTeamToEdit(null);
+    }
+  }, [playerToDelete, teamToEdit]);
 
   const cancelReplacePlayer = useCallback(() => {
     setShowReplaceDialog(false);
@@ -79,13 +94,54 @@ export const useTeamListHandlers = () => {
     setSelectedReplacementPlayer(selectedOption);
   }, []);
 
+  const debouncedFetchPlayers = useCallback(
+    debounce(async (playerName: string) => {
+      setIsLoading(true);
+      try {
+        const playersData = await playersApi.getPlayers(playerName);
+        setPlayers(playersData);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 300),
+    []
+  );
+
+  const handlePlayerSelect = useCallback(
+    (playerId: number) => {
+      const selectedPlayer = players.find(
+        (player) => player.player_id === playerId
+      );
+      if (!selectedPlayer) return;
+
+      const isSelected = teams.some((team) =>
+        team.players.some((player) => player.player_id === playerId)
+      );
+
+      if (isSelected) {
+        setShowPlayerTakenDialog(true);
+        return;
+      }
+
+      if (selectedPlayer) {
+        addSelectedPlayer(selectedPlayer);
+      }
+    },
+    [players, teams, addSelectedPlayer]
+  );
+
   return {
+    isLoading,
     showDeleteConfirmation,
     setShowDeleteConfirmation,
     showEditDialog,
     setShowEditDialog,
     showReplaceDialog,
     setShowReplaceDialog,
+    showPlayerTakenDialog,
+    setShowPlayerTakenDialog,
     teamToDelete,
     teamToEdit,
     playerToDelete,
@@ -106,5 +162,7 @@ export const useTeamListHandlers = () => {
     playerOptions,
     setPlayerOptions,
     handleSelectChange,
+    debouncedFetchPlayers,
+    handlePlayerSelect,
   };
 };
