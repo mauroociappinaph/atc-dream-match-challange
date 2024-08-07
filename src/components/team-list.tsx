@@ -20,6 +20,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import Select from "react-select";
 import { usePlayerListStore } from "@/store/store";
 import playersApi from "@/app/api/playersApi";
 import { useTeamListHandlers } from "@/handlers/TeamListHandlers";
@@ -53,26 +54,14 @@ export default function TeamList() {
   } = useTeamListHandlers();
 
   useEffect(() => {
-<<<<<<<<<<<<<<  ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>>
     const fetchPlayers = async () => {
       try {
-        if (playersApi) {
-          const playersData = await playersApi.getPlayers();
-          if (playersData) {
-            setPlayers(playersData);
-          } else {
-            console.error("Error fetching players: received null data");
-          }
-        } else {
-          console.error("Error fetching players: playersApi is null");
-        }
         const playersData = await playersApi.getPlayers();
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);
       }
     };
-<<<<<<<  4b5eb72b-68d6-4037-b573-f207c9a10393  >>>>>>>
 
     fetchPlayers();
   }, [setPlayers]);
@@ -118,18 +107,25 @@ export default function TeamList() {
                   >
                     <div className="bg-gray-300 p-2 rounded-full">
                       <Avatar>
-                        <AvatarImage src="/placeholder-user.jpg" alt={player} />
-                        <AvatarFallback>{player.charAt(0)}</AvatarFallback>
+                        <AvatarImage
+                          src="/placeholder-user.jpg"
+                          alt={player.player_name}
+                        />
+                        <AvatarFallback>
+                          {player.player_name.charAt(0)}
+                        </AvatarFallback>
                       </Avatar>
                     </div>
                     <div className="bg-gray-300 p-2 rounded-md text-center">
-                      <span>{player}</span>
+                      <span>{player.player_name}</span>
                     </div>
                     <div className="bg-gray-300 p-2 rounded-md text-center">
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleDeletePlayer(team, player)}
+                        onClick={() =>
+                          handleDeletePlayer(team, player.player_name)
+                        }
                       >
                         Editar
                       </Button>
