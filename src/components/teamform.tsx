@@ -61,7 +61,9 @@ export default function TeamForm() {
 
   const selectedPlayerIsTakenByOtherTeam = (selectedPlayer: Player) => {
     return teams.some((team) =>
-      team.players.includes(selectedPlayer.player_name)
+      team.players.some(
+        (player) => player.player_name === selectedPlayer.player_name
+      )
     );
   };
 
@@ -126,7 +128,7 @@ export default function TeamForm() {
     const newTeam: Team = {
       id: Date.now(), // Using timestamp as a simple ID
       name: teamName,
-      players: selectedPlayers.map((player) => player.player_name),
+      players: selectedPlayers,
     };
 
     addTeam(newTeam);
