@@ -14,7 +14,7 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
         set((state) => {
             // Verifica si el jugador ya está en alguno de los equipos
             const isPlayerInTeams = state.teams.some(team =>
-                team.players.includes(player.player_name)
+                team.players.some(teamPlayer => teamPlayer.player_id === player.player_id)
             );
             if (state.selectedPlayers.length >= 5 || isPlayerInTeams) {
                 return state;
@@ -66,7 +66,7 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
                     return {
                         ...team,
                         players: team.players.map(player =>
-                            player === oldPlayer ? newPlayer.player_name : player
+                            player.player_name === oldPlayer ? newPlayer : player
                         ),
                     };
                 }
@@ -76,15 +76,22 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
         })),
     addAnotherPlayerAfterDelete: (teamId: number, oldPlayer: string, newPlayer: Player) =>
         set((state) => {
+            if (state.teams.length === 0 || state.selectedPlayers.length === 0 || !newPlayer) {
+                return state;
+            }
+
             const updatedTeams = state.teams.map(team => {
                 if (team.id === teamId) {
                     return {
                         ...team,
-                        players: team.players.filter(player => player !== oldPlayer).concat(newPlayer.player_name),
+                        players: team.players
+                            .filter(player => player.player_name !== oldPlayer)
+                            .concat(newPlayer),
                     };
                 }
                 return team;
             });
+
             return {
                 teams: updatedTeams,
                 selectedPlayers: state.selectedPlayers.filter(p => p.player_name !== oldPlayer),
