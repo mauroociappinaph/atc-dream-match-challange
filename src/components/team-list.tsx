@@ -52,6 +52,7 @@ export default function TeamList() {
     confirmDeletePlayer,
     cancelReplacePlayer,
     playerOptions,
+    setPlayerOptions,
     handleSelectChange,
   } = useTeamListHandlers();
 
@@ -67,6 +68,25 @@ export default function TeamList() {
 
     fetchPlayers();
   }, [setPlayers]);
+
+  useEffect(() => {
+    if (showReplaceDialog) {
+      const fetchPlayerOptions = async () => {
+        try {
+          const playersData = await playersApi.getPlayers();
+          const options = playersData.map((player) => ({
+            value: player.player_id,
+            label: player.player_name,
+          }));
+          setPlayerOptions(options);
+        } catch (error) {
+          console.error("Error fetching player options:", error);
+        }
+      };
+
+      fetchPlayerOptions();
+    }
+  }, [showReplaceDialog, setPlayerOptions]);
 
   return (
     <div className="flex justify-center items-center p-4 bg-gray-100">
@@ -133,7 +153,7 @@ export default function TeamList() {
               <DialogHeader>
                 <DialogTitle>Borrar Equipo</DialogTitle>
                 <DialogDescription>
-                  ¿Estás seguro que quieres borrar el equipo? "
+                  ¿Estás seguro que quieres borrar el equipo "
                   {teamToDelete?.name}"?
                 </DialogDescription>
               </DialogHeader>
