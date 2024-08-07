@@ -50,9 +50,7 @@ export default function TeamList() {
     handleDeletePlayer,
     confirmDeletePlayer,
     cancelReplacePlayer,
-    playerOptions,
     setPlayerOptions,
-    handleSelectChange,
   } = useTeamListHandlers();
 
   useEffect(() => {
