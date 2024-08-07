@@ -196,7 +196,7 @@ export default function TeamList() {
                 <Button variant="outline" onClick={cancelEdit}>
                   Cancelar
                 </Button>
-                <Button variant="primary" onClick={saveEdit}>
+                <Button variant="destructive" onClick={saveEdit}>
                   Guardar
                 </Button>
               </div>
