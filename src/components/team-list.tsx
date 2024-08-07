@@ -41,8 +41,6 @@ export default function TeamList() {
     playerToDelete,
     newTeamName,
     setNewTeamName,
-    selectedReplacementPlayer,
-    setSelectedReplacementPlayer,
     handleDeleteTeam,
     confirmDeleteTeam,
     cancelDeleteTeam,
@@ -50,7 +48,6 @@ export default function TeamList() {
     saveEdit,
     cancelEdit,
     handleDeletePlayer,
-    confirmReplacePlayer,
     confirmDeletePlayer,
     cancelReplacePlayer,
     playerOptions,
@@ -205,20 +202,14 @@ export default function TeamList() {
           <Dialog open={showReplaceDialog} onOpenChange={setShowReplaceDialog}>
             <DialogContent className="p-6 grid gap-4">
               <DialogHeader>
-                <DialogTitle>Remplazar Jugador o Eliminar Jugador</DialogTitle>
+                <DialogTitle>Eliminar Jugador</DialogTitle>
                 <DialogDescription>
-                  {`Selecciona un nuevo jugador para reemplazar a ${playerToDelete}`}
+                  {`¿Estás seguro que quieres eliminar el jugador ${playerToDelete}?`}
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex flex-col gap-2">
-                <Select options={playerOptions} onChange={handleSelectChange} />
-              </div>
               <div className="flex items-center justify-end gap-2">
-                <Button variant="primary" onClick={cancelReplacePlayer}>
+                <Button variant="outline" onClick={cancelReplacePlayer}>
                   Cancelar
-                </Button>
-                <Button variant="primary" onClick={confirmReplacePlayer}>
-                  Reemplazar
                 </Button>
                 <Button variant="destructive" onClick={confirmDeletePlayer}>
                   Eliminar

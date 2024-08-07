@@ -17,7 +17,7 @@ export default function Create() {
         </section>
         <section className="w-full max-w-4xl bg-white  p-6">
           <h2 className="text-2xl font-bold mb-4 text-center">
-            Elegí tus jugadores
+            Elegí tus 5 jugadores
           </h2>
           <PlayerList />
         </section>
