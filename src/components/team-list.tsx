@@ -156,8 +156,8 @@ export default function TeamList() {
               <DialogHeader>
                 <DialogTitle>Borrar Equipo</DialogTitle>
                 <DialogDescription>
-                  ¿Estás seguro que quieres borrar el equipo "
-                  {teamToDelete?.name}"?
+                  ¿Estás seguro que quieres borrar el equipo &quot;
+                  {teamToDelete?.name}&quot;?
                 </DialogDescription>
               </DialogHeader>
               <div className="flex items-center justify-end gap-2">

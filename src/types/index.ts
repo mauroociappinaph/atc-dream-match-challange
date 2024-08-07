@@ -8,14 +8,21 @@ export interface Player {
 export interface PlayerListStore {
     players: Player[];
     selectedPlayers: Player[];
+    teams: Team[];
     searchTerm: string;
     currentPage: number;
     setPlayers: (players: Player[]) => void;
     setSearchTerm: (term: string) => void;
     setCurrentPage: (page: number) => void;
     addSelectedPlayer: (player: Player) => void;
-    removeSelectedPlayer: (player: Player) => void;
-
+    removeSelectedPlayer: (playerId: number) => void;
+    addTeam: (team: Team) => void;
+    removeTeam: (teamId: number) => void;
+    clearSelectedPlayers: () => void;
+    updateTeam: (updatedTeam: Team) => void;
+    deletePlayerOfSelectedPlayer: (playerId: number) => void;
+    replacePlayerInTeam: (teamId: number, oldPlayer: string, newPlayer: Player) => void;
+    addAnotherPlayerAfterDelete: (teamId: number, oldPlayer: string, newPlayer: Player) => void;
 }
 
 

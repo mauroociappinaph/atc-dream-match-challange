@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlayerCardProps } from "@/types/index";
-
+import Image from "next/image";
 const PlayerCard: React.FC<PlayerCardProps> = ({
   player,
   isSelected,
@@ -11,7 +11,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
   return (
     <Card className="player-card">
       <CardContent>
-        <img
+        <Image
           src={player.player_image}
           alt={player.player_name}
           className="player-image"

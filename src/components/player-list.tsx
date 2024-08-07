@@ -14,7 +14,7 @@ import {
 import PlayerCard from "../components/player-card";
 import PlayerSearch from "../components/player-search";
 import PlayerPagination from "../components/player-pagination";
-import { usePlayerListHandlers } from "../handlers/PlayerListHandlers";
+import { useTeamListHandlers } from "../handlers/PlayerListHandlers";
 import { Button } from "@/components/ui/button";
 
 export default function PlayerList() {
@@ -36,7 +36,7 @@ export default function PlayerList() {
     setShowPlayerTakenDialog,
     debouncedFetchPlayers,
     handlePlayerSelect,
-  } = usePlayerListHandlers();
+  } = useTeamListHandlers();
 
   useEffect(() => {
     if (searchTerm.trim() !== "") {
