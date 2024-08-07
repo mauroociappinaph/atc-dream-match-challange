@@ -29,9 +29,7 @@ export default function Create() {
         </section>
       </main>
       <footer className="w-full bg-customRed shadow-md py-4 text-center mt-auto">
-        <h6 className="text-white">
-          © 2024 Dream Match. All rights reserved.
-        </h6>
+        <h6 className="text-white">© 2024 Dream Match.</h6>
       </footer>
     </div>
   );
