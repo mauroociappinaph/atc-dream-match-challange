@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -26,6 +26,7 @@ import { useTeamListHandlers } from "@/handlers/TeamListHandlers";
 
 export default function TeamList() {
   const { teams, setPlayers } = usePlayerListStore();
+  const [noPlayersDialog, setNoPlayersDialog] = useState(false);
 
   const {
     showDeleteConfirmation,
@@ -74,11 +75,15 @@ export default function TeamList() {
       const fetchPlayerOptions = async () => {
         try {
           const playersData = await playersApi.getPlayers();
-          const options = playersData.map((player) => ({
-            value: player.player_id,
-            label: player.player_name,
-          }));
-          setPlayerOptions(options);
+          if (playersData.length === 0) {
+            setNoPlayersDialog(true);
+          } else {
+            const options = playersData.map((player) => ({
+              value: player.player_id,
+              label: player.player_name,
+            }));
+            setPlayerOptions(options);
+          }
         } catch (error) {
           console.error("Error fetching player options:", error);
         }
@@ -94,7 +99,7 @@ export default function TeamList() {
         {teams.map((team) => (
           <Card key={team.id} className="p-4 w-full bg-gray-200">
             <CardHeader>
-              <CardTitle>{team.name}</CardTitle>
+              <CardTitle className="text-customRed">{team.name}</CardTitle>
               <CardDescription>{team.players.length} players</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-2 justify-center items-center">
@@ -218,6 +223,26 @@ export default function TeamList() {
                   Eliminar
                 </Button>
               </div>
+            </DialogContent>
+          </Dialog>
+        )}
+        {noPlayersDialog && (
+          <Dialog open={noPlayersDialog} onOpenChange={setNoPlayersDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>No hay jugadores disponibles</DialogTitle>
+                <DialogDescription>
+                  No se encontraron jugadores disponibles para reemplazar.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setNoPlayersDialog(false)}
+                >
+                  Cerrar
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}
