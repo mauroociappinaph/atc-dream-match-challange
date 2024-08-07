@@ -79,24 +79,29 @@ export const useTeamListHandlers = () => {
 
   const confirmReplacePlayer = () => {
     if (teamToEdit && playerToDelete && selectedReplacementPlayer) {
-      replacePlayerInTeam(teamToEdit.id, playerToDelete, {
-        player_id: selectedReplacementPlayer.value,
-        player_name: selectedReplacementPlayer.label,
-      });
+      const replacementPlayer = players.find(
+        (player) => player.player_id === selectedReplacementPlayer.value
+      );
+
+      if (replacementPlayer) {
+        replacePlayerInTeam(teamToEdit.id, playerToDelete, replacementPlayer);
+      }
     }
     setShowReplaceDialog(false);
   };
 
   const confirmDeletePlayer = () => {
     if (teamToEdit && playerToDelete) {
-      addAnotherPlayerAfterDelete(teamToEdit.id, playerToDelete, {
+      const emptyPlayer: Player = {
         player_id: 0,
         player_name: "",
-      });
+        player_type: "",
+        player_image: "",
+      };
+      addAnotherPlayerAfterDelete(teamToEdit.id, playerToDelete, emptyPlayer);
     }
     setShowReplaceDialog(false);
   };
-
   const cancelReplacePlayer = () => {
     setShowReplaceDialog(false);
   };
