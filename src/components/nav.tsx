@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 
 export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,10 +11,11 @@ export default function Nav() {
 
   return (
     <header className="lg:px-16 px-4 bg-customRed flex flex-wrap items-center   py-4 shadow-md">
-      <div className="flex-1 flex justify-between items-center">
-        <h3 className="text-xl bolder text-white font-bold ">DREAM MATCH</h3>
-      </div>
-
+      <Link href="/">
+        <div className="flex-1 flex justify-between items-center">
+          <h3 className="text-xl bolder text-white font-bold">DREAM MATCH</h3>
+        </div>
+      </Link>
       <input
         className="hidden"
         type="checkbox"
