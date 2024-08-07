@@ -2,10 +2,16 @@ import { useCallback, useState, useEffect } from "react";
 import { debounce } from "lodash";
 import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
-import { Player } from "@/types/index";
+import { Player, Team } from "@/types/index";
 
 export const useTeamListHandlers = () => {
-  const { setPlayers, players, teams } = usePlayerListStore();
+  const {
+    setPlayers,
+    players,
+    teams,
+    addSelectedPlayer,
+    removeSelectedPlayer,
+  } = usePlayerListStore();
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -21,6 +27,8 @@ export const useTeamListHandlers = () => {
   const [playerOptions, setPlayerOptions] = useState<
     { value: number; label: string }[]
   >([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPlayerTakenDialog, setShowPlayerTakenDialog] = useState(false);
 
   useEffect(() => {
     setPlayerOptions(
@@ -30,6 +38,21 @@ export const useTeamListHandlers = () => {
       }))
     );
   }, [players]);
+
+  const debouncedFetchPlayers = useCallback(
+    debounce(async (searchTerm: string) => {
+      setIsLoading(true);
+      try {
+        const playersData = await playersApi.getPlayers(searchTerm);
+        setPlayers(playersData);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 500),
+    [setPlayers]
+  );
 
   const handleDeleteTeam = useCallback((team: Team) => {
     setTeamToDelete(team);
@@ -83,6 +106,28 @@ export const useTeamListHandlers = () => {
     setSelectedReplacementPlayer(selectedOption);
   }, []);
 
+  const handlePlayerSelect = useCallback(
+    (player: Player) => {
+      if (teams.some((team) => team.players.includes(player.player_name))) {
+        setShowPlayerTakenDialog(true);
+        return;
+      }
+
+      if (players.includes(player)) {
+        removeSelectedPlayer(player.player_id);
+      } else {
+        addSelectedPlayer(player);
+      }
+    },
+    [
+      teams,
+      players,
+      addSelectedPlayer,
+      removeSelectedPlayer,
+      setShowPlayerTakenDialog,
+    ]
+  );
+
   return {
     showDeleteConfirmation,
     setShowDeleteConfirmation,
@@ -110,5 +155,10 @@ export const useTeamListHandlers = () => {
     playerOptions,
     setPlayerOptions,
     handleSelectChange,
+    isLoading,
+    debouncedFetchPlayers,
+    showPlayerTakenDialog,
+    setShowPlayerTakenDialog,
+    handlePlayerSelect,
   };
 };
