@@ -38,6 +38,7 @@ export default function TeamForm() {
   const [showPlayerCountErrorDialog, setShowPlayerCountErrorDialog] =
     useState(false);
   const [showPlayerTakenDialog, setShowPlayerTakenDialog] = useState(false);
+  const [showTeamLimitDialog, setShowTeamLimitDialog] = useState(false);
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -114,6 +115,11 @@ export default function TeamForm() {
 
     if (selectedPlayers.length < 5) {
       setShowPlayerCountErrorDialog(true);
+      return;
+    }
+
+    if (teams.length >= 2) {
+      setShowTeamLimitDialog(true);
       return;
     }
 
@@ -240,6 +246,23 @@ export default function TeamForm() {
           </DialogHeader>
           <DialogFooter>
             <Button onClick={() => setShowPlayerTakenDialog(false)}>
+              Cerrar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Team Limit Dialog */}
+      <Dialog open={showTeamLimitDialog} onOpenChange={setShowTeamLimitDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Límite de Equipos</DialogTitle>
+            <DialogDescription>
+              Solo puedes crear dos equipos.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowTeamLimitDialog(false)}>
               Cerrar
             </Button>
           </DialogFooter>
