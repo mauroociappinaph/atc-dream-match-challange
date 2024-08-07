@@ -12,21 +12,15 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
+      "@testing-library/jest-dom/extend-expect"
     ],
     "testEnvironment": "jest-environment-jsdom",
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
     },
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
-    },
-    "moduleNameMapper": {
-      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
-    },
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-dom/extend-expect"
-    ]
+    }
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
@@ -53,6 +47,7 @@
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

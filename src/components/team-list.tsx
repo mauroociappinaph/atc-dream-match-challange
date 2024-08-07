@@ -20,7 +20,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import Select from "react-select";
+
 import { usePlayerListStore } from "@/store/store";
 import playersApi from "@/app/api/playersApi";
 import { useTeamListHandlers } from "@/handlers/TeamListHandlers";
