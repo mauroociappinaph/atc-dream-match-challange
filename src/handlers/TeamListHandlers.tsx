@@ -2,21 +2,22 @@ import { useCallback, useState, useEffect } from "react";
 import { debounce } from "lodash";
 import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
-import { Player } from "@/types/index";
+import { Player, Team, PlayerOption } from "@/types/index";
 
 export const useTeamListHandlers = () => {
   const { setPlayers, players, teams } = usePlayerListStore();
 
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showEditDialog, setShowEditDialog] = useState(false);
-  const [showReplaceDialog, setShowReplaceDialog] = useState(false);
-  const [teamToDelete, setTeamToDelete] = useState(null);
-  const [teamToEdit, setTeamToEdit] = useState(null);
-  const [playerToDelete, setPlayerToDelete] = useState(null);
-  const [newTeamName, setNewTeamName] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] =
+    useState<boolean>(false);
+  const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
+  const [showReplaceDialog, setShowReplaceDialog] = useState<boolean>(false);
+  const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
+  const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
+  const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
+  const [newTeamName, setNewTeamName] = useState<string>("");
   const [selectedReplacementPlayer, setSelectedReplacementPlayer] =
-    useState(null);
-  const [playerOptions, setPlayerOptions] = useState([]);
+    useState<PlayerOption | null>(null);
+  const [playerOptions, setPlayerOptions] = useState<PlayerOption[]>([]);
 
   useEffect(() => {
     setPlayerOptions(
@@ -27,7 +28,7 @@ export const useTeamListHandlers = () => {
     );
   }, [players]);
 
-  const handleDeleteTeam = (team) => {
+  const handleDeleteTeam = (team: Team) => {
     setTeamToDelete(team);
     setShowDeleteConfirmation(true);
   };
@@ -41,7 +42,7 @@ export const useTeamListHandlers = () => {
     setShowDeleteConfirmation(false);
   };
 
-  const handleEdit = (team) => {
+  const handleEdit = (team: Team) => {
     setTeamToEdit(team);
     setNewTeamName(team.name);
     setShowEditDialog(true);
@@ -56,7 +57,7 @@ export const useTeamListHandlers = () => {
     setShowEditDialog(false);
   };
 
-  const handleDeletePlayer = (team, player) => {
+  const handleDeletePlayer = (team: Team, player: Player) => {
     setPlayerToDelete(player);
     setShowReplaceDialog(true);
   };
@@ -75,7 +76,7 @@ export const useTeamListHandlers = () => {
     setShowReplaceDialog(false);
   };
 
-  const handleSelectChange = (selectedOption) => {
+  const handleSelectChange = (selectedOption: PlayerOption | null) => {
     setSelectedReplacementPlayer(selectedOption);
   };
 

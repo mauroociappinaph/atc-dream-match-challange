@@ -56,3 +56,8 @@ export interface PlayerCardProps {
     onSelect: (player: Player) => void;
 }
 
+export interface PlayerOption {
+    value: number;
+    label: string;
+}
+

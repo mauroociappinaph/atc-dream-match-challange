@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import Select from "react-select";
@@ -223,26 +224,6 @@ export default function TeamList() {
                   Eliminar
                 </Button>
               </div>
-            </DialogContent>
-          </Dialog>
-        )}
-        {noPlayersDialog && (
-          <Dialog open={noPlayersDialog} onOpenChange={setNoPlayersDialog}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>No hay jugadores disponibles</DialogTitle>
-                <DialogDescription>
-                  No se encontraron jugadores disponibles para reemplazar.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => setNoPlayersDialog(false)}
-                >
-                  Cerrar
-                </Button>
-              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}
