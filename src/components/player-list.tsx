@@ -39,6 +39,7 @@ export default function PlayerList() {
   } = useTeamListHandlers();
 
   useEffect(() => {
+    console.log("Current players:", players); // Verifica los jugadores aquí
     if (searchTerm.trim() !== "") {
       debouncedFetchPlayers(searchTerm);
     } else {
@@ -78,9 +79,10 @@ export default function PlayerList() {
         <LoadingSpinner />
       ) : (
         <>
-          {players.length > 0 && (
+          {players.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {currentPlayers.map((player) => {
+                console.log("Rendering player:", player); // Verifica cada jugador aquí
                 if (!player) {
                   return null;
                 }
@@ -96,6 +98,8 @@ export default function PlayerList() {
                 );
               })}
             </div>
+          ) : (
+            <div>No players found</div> // Mensaje de error si no hay jugadores
           )}
           <div className="flex justify-space-between items-center">
             <PlayerPagination
@@ -108,7 +112,6 @@ export default function PlayerList() {
         </>
       )}
 
-      {/* Player Taken Error Dialog */}
       <Dialog
         open={showPlayerTakenDialog}
         onOpenChange={setShowPlayerTakenDialog}

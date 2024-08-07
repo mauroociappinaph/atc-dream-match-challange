@@ -12,7 +12,6 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
     setCurrentPage: (page: number) => set({ currentPage: page }),
     addSelectedPlayer: (player: Player) =>
         set((state) => {
-            // Verifica si el jugador ya está en alguno de los equipos
             const isPlayerInTeams = state.teams.some(team =>
                 team.players.some(teamPlayer => teamPlayer.player_id === player.player_id)
             );

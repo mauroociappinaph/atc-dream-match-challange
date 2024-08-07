@@ -99,6 +99,7 @@ export const useTeamListHandlers = () => {
       setIsLoading(true);
       try {
         const playersData = await playersApi.getPlayers(playerName);
+        console.log("Fetched players:", playersData);
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);

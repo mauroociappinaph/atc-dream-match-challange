@@ -1,9 +1,5 @@
-// src/api/playersApi.ts
-
 import axiosClient from './axiosClient';
 import { PlayersApiResponse, Player } from "../../../src/types/index";
-
-// Definir la interfaz para el tipo de jugador
 
 const playersApi = {
     async getPlayers(playerName: string = ''): Promise<Player[]> {
@@ -17,8 +13,16 @@ const playersApi = {
                 }
             });
 
+            console.log('getPlayers: response.data =', response.data);
+
+            // Asegúrate de que la estructura de datos es correcta
+            if (!Array.isArray(response.data)) {
+                console.error('getPlayers: response.data is not an array');
+                return [];
+            }
+
             const uniquePlayers = new Map<number, Player>();
-            for (const player of response.data.data) {
+            for (const player of response.data) {
                 if (player.player_image && player.player_image.trim() !== '') {
                     uniquePlayers.set(player.player_id, {
                         player_id: player.player_id,
@@ -29,7 +33,10 @@ const playersApi = {
                 }
             }
 
-            return Array.from(uniquePlayers.values());
+            const playersArray = Array.from(uniquePlayers.values());
+            console.log('getPlayers: uniquePlayers =', playersArray);
+
+            return playersArray;
         } catch (error) {
             console.error('getPlayers: error =', error);
             return [];
