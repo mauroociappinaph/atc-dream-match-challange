@@ -19,7 +19,7 @@ export const useTeamListHandlers = () => {
   const [showPlayerTakenDialog, setShowPlayerTakenDialog] = useState(false);
   const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
   const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
-  const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
+  const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null); // Cambiar a Player
   const [newTeamName, setNewTeamName] = useState("");
   const [selectedReplacementPlayer, setSelectedReplacementPlayer] =
     useState<PlayerOption | null>(null);
@@ -110,14 +110,9 @@ export const useTeamListHandlers = () => {
   );
 
   const handlePlayerSelect = useCallback(
-    (playerId: number) => {
-      const selectedPlayer = players.find(
-        (player) => player.player_id === playerId
-      );
-      if (!selectedPlayer) return;
-
+    (player: Player) => {
       const isSelected = teams.some((team) =>
-        team.players.some((player) => player.player_id === playerId)
+        team.players.some((p) => p.player_id === player.player_id)
       );
 
       if (isSelected) {
@@ -125,11 +120,11 @@ export const useTeamListHandlers = () => {
         return;
       }
 
-      if (selectedPlayer) {
-        addSelectedPlayer(selectedPlayer);
+      if (player) {
+        addSelectedPlayer(player);
       }
     },
-    [players, teams, addSelectedPlayer]
+    [teams, addSelectedPlayer]
   );
 
   return {

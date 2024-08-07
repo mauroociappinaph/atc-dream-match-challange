@@ -91,7 +91,7 @@ export default function PlayerList() {
                     isSelected={selectedPlayers.some(
                       (p) => p.player_id === player.player_id
                     )}
-                    onSelect={handlePlayerSelect}
+                    onSelect={() => handlePlayerSelect(player)}
                   />
                 );
               })}
