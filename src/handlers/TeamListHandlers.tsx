@@ -1,126 +1,82 @@
-import { useState } from "react";
+import { useCallback, useState, useEffect } from "react";
+import { debounce } from "lodash";
+import playersApi from "@/app/api/playersApi";
 import { usePlayerListStore } from "@/store/store";
-import { Team, Player } from "@/types/index";
+import { Player } from "@/types/index";
 
 export const useTeamListHandlers = () => {
-  const {
-    teams,
-    removeTeam,
-    updateTeam,
-    deletePlayerOfSelectedPlayer,
-    replacePlayerInTeam,
-    players,
-  } = usePlayerListStore();
+  const { setPlayers, players, teams } = usePlayerListStore();
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showReplaceDialog, setShowReplaceDialog] = useState(false);
-  const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
-  const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
-  const [playerToDelete, setPlayerToDelete] = useState<string | null>(null);
+  const [teamToDelete, setTeamToDelete] = useState(null);
+  const [teamToEdit, setTeamToEdit] = useState(null);
+  const [playerToDelete, setPlayerToDelete] = useState(null);
   const [newTeamName, setNewTeamName] = useState("");
   const [selectedReplacementPlayer, setSelectedReplacementPlayer] =
-    useState<Player | null>(null);
+    useState(null);
+  const [playerOptions, setPlayerOptions] = useState([]);
 
-  // Handlers for deleting a team
-  const handleDeleteTeam = (team: Team) => {
+  useEffect(() => {
+    setPlayerOptions(
+      players.map((player) => ({
+        value: player.player_id,
+        label: player.player_name,
+      }))
+    );
+  }, [players]);
+
+  const handleDeleteTeam = (team) => {
     setTeamToDelete(team);
     setShowDeleteConfirmation(true);
   };
 
   const confirmDeleteTeam = () => {
-    if (teamToDelete) {
-      removeTeam(teamToDelete.id);
-      setShowDeleteConfirmation(false);
-      setTeamToDelete(null);
-    }
+    // Lógica para borrar el equipo
+    setShowDeleteConfirmation(false);
   };
 
   const cancelDeleteTeam = () => {
     setShowDeleteConfirmation(false);
-    setTeamToDelete(null);
   };
 
-  // Handlers for editing a team
-  const handleEdit = (team: Team) => {
+  const handleEdit = (team) => {
     setTeamToEdit(team);
     setNewTeamName(team.name);
     setShowEditDialog(true);
   };
 
   const saveEdit = () => {
-    if (teamToEdit) {
-      const updatedTeam = {
-        ...teamToEdit,
-        name: newTeamName,
-      };
-      updateTeam(updatedTeam);
-      setShowEditDialog(false);
-      setTeamToEdit(null);
-      setNewTeamName("");
-    }
+    // Lógica para guardar el nombre editado del equipo
+    setShowEditDialog(false);
   };
 
   const cancelEdit = () => {
     setShowEditDialog(false);
-    setTeamToEdit(null);
-    setNewTeamName("");
   };
 
-  // Handlers for deleting a player
-  const handleDeletePlayer = (team: Team, player: string) => {
-    setTeamToEdit(team);
+  const handleDeletePlayer = (team, player) => {
     setPlayerToDelete(player);
     setShowReplaceDialog(true);
   };
 
+  const confirmReplacePlayer = () => {
+    // Lógica para reemplazar el jugador
+    setShowReplaceDialog(false);
+  };
+
   const confirmDeletePlayer = () => {
-    if (teamToEdit && playerToDelete) {
-      const updatedTeam = {
-        ...teamToEdit,
-        players: teamToEdit.players.filter((p) => p !== playerToDelete),
-      };
-      updateTeam(updatedTeam);
-      deletePlayerOfSelectedPlayer(
-        teams.flatMap((t) => t.players).find((p) => p === playerToDelete)
-          ?.player_id ?? 0
-      );
-      setShowReplaceDialog(false);
-      setTeamToEdit(null);
-      setPlayerToDelete(null);
-    }
+    // Lógica para eliminar el jugador
+    setShowReplaceDialog(false);
   };
 
   const cancelReplacePlayer = () => {
     setShowReplaceDialog(false);
-    setTeamToEdit(null);
-    setPlayerToDelete(null);
-    setSelectedReplacementPlayer(null);
   };
 
-  // Handlers for replacing a player
-  const confirmReplacePlayer = () => {
-    if (teamToEdit && playerToDelete && selectedReplacementPlayer) {
-      replacePlayerInTeam(
-        teamToEdit.id,
-        playerToDelete,
-        selectedReplacementPlayer
-      );
-      setShowReplaceDialog(false);
-      setTeamToEdit(null);
-      setPlayerToDelete(null);
-      setSelectedReplacementPlayer(null);
-    }
-  };
-
-  const playerOptions = players.map((player) => ({
-    value: player.player_id,
-    label: player.player_name,
-  }));
-
-  const handleSelectChange = (selectedOption: any) => {
-    const player = players.find((p) => p.player_id === selectedOption.value);
-    setSelectedReplacementPlayer(player || null);
+  const handleSelectChange = (selectedOption) => {
+    setSelectedReplacementPlayer(selectedOption);
   };
 
   return {

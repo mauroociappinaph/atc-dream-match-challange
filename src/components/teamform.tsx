@@ -133,7 +133,7 @@ export default function TeamForm() {
 
   return (
     <>
-      <section className="flex flex-col justify-center items-center p-4 m-4 w-full">
+      <section className="flex flex-col justify-center items-center p-4 m-4 w-auto bg-gray-100">
         <div className="flex flex-col lg:flex-row w-full justify-around items-start p-4 space-y-4 lg:space-y-0 lg:space-x-8">
           <div className="flex flex-col w-full lg:w-1/2 space-y-4">
             <Label htmlFor="teamName" className="text-center">
@@ -169,7 +169,9 @@ export default function TeamForm() {
           </div>
         </div>
         <CardFooter className="flex justify-center w-full gap-2 mt-4">
-          <Button onClick={handleSaveChanges}>Crea tu equipo</Button>
+          <Button onClick={handleSaveChanges} className="bg-customRed">
+            Crea tu equipo
+          </Button>
         </CardFooter>
       </section>
 
@@ -181,7 +183,12 @@ export default function TeamForm() {
             <DialogDescription>{errorMessage}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setShowErrorDialog(false)}>Cerrar</Button>
+            <Button
+              onClick={() => setShowErrorDialog(false)}
+              className="bg-customRed"
+            >
+              Cerrar
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

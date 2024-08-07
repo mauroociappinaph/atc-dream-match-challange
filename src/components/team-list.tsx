@@ -21,12 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import Select from "react-select";
 import { usePlayerListStore } from "@/store/store";
-
 import playersApi from "@/app/api/playersApi";
 import { useTeamListHandlers } from "@/handlers/TeamListHandlers";
 
 export default function TeamList() {
-  const { teams, players, setPlayers } = usePlayerListStore();
+  const { teams, setPlayers } = usePlayerListStore();
 
   const {
     showDeleteConfirmation,
@@ -70,51 +69,58 @@ export default function TeamList() {
   }, [setPlayers]);
 
   return (
-    <div className="flex  justify-center items-center">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+    <div className="flex justify-center items-center p-4 bg-gray-100">
+      <div className="grid gap-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         {teams.map((team) => (
-          <Card key={team.id} className="p-4">
+          <Card key={team.id} className="p-4 w-full bg-gray-200">
             <CardHeader>
               <CardTitle>{team.name}</CardTitle>
               <CardDescription>{team.players.length} players</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid gap-2">
+            <CardContent className="grid gap-2 justify-center items-center">
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 gap-2 justify-center items-center">
                 {team.players.map((player, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Avatar>
-                      <AvatarImage src="/placeholder-user.jpg" alt={player} />
-                      <AvatarFallback>{player.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <span>{player}</span>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDeletePlayer(team, player)}
-                    >
-                      Editar
-                    </Button>
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row md:flex-row items-center justify-center gap-2"
+                  >
+                    <div className="bg-gray-300 p-2 rounded-full">
+                      <Avatar>
+                        <AvatarImage src="/placeholder-user.jpg" alt={player} />
+                        <AvatarFallback>{player.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="bg-gray-300 p-2 rounded-md text-center">
+                      <span>{player}</span>
+                    </div>
+                    <div className="bg-gray-300 p-2 rounded-md text-center">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeletePlayer(team, player)}
+                      >
+                        Editar
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
             </CardContent>
-            <CardFooter className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleEdit(team)}
-                >
-                  Editar Nombre del Equipo
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDeleteTeam(team)}
-                >
-                  Borrar
-                </Button>
-              </div>
+            <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleEdit(team)}
+              >
+                Editar Nombre del Equipo
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => handleDeleteTeam(team)}
+              >
+                Borrar
+              </Button>
             </CardFooter>
           </Card>
         ))}
@@ -127,7 +133,7 @@ export default function TeamList() {
               <DialogHeader>
                 <DialogTitle>Borrar Equipo</DialogTitle>
                 <DialogDescription>
-                  ¿Estás seguro que quieres borrar el equipo "
+                  ¿Estás seguro que quieres borrar el equipo? "
                   {teamToDelete?.name}"?
                 </DialogDescription>
               </DialogHeader>
@@ -182,7 +188,7 @@ export default function TeamList() {
                 <Select options={playerOptions} onChange={handleSelectChange} />
               </div>
               <div className="flex items-center justify-end gap-2">
-                <Button variant="outline" onClick={cancelReplacePlayer}>
+                <Button variant="primary" onClick={cancelReplacePlayer}>
                   Cancelar
                 </Button>
                 <Button variant="primary" onClick={confirmReplacePlayer}>

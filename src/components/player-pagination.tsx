@@ -11,7 +11,11 @@ const PlayerPagination: React.FC<PlayerPaginationProps> = ({
   return (
     <div className="flex justify-space-between items-center m-4">
       <div className="flex justify-between m-2 p-2 gap-2">
-        <Button onClick={onPreviousPage} disabled={currentPage === 1}>
+        <Button
+          onClick={onPreviousPage}
+          disabled={currentPage === 1}
+          className="bg-customRed"
+        >
           Anterior
         </Button>
       </div>
@@ -19,6 +23,7 @@ const PlayerPagination: React.FC<PlayerPaginationProps> = ({
         <Button
           onClick={onNextPage}
           disabled={currentPage === totalPages || totalPages === 0}
+          className="bg-customRed"
         >
           Siguiente
         </Button>
