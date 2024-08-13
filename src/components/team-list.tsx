@@ -96,7 +96,7 @@ export default function TeamList() {
           <Card key={team.id} className="p-4 w-full bg-gray-200">
             <CardHeader>
               <CardTitle className="text-customRed">{team.name}</CardTitle>
-              <CardDescription>{team.players.length} players</CardDescription>
+              <CardDescription>{team.players.length} jugadores</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-2 justify-center items-center">
               <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 gap-2 justify-center items-center">
@@ -108,7 +108,7 @@ export default function TeamList() {
                     <div className="bg-gray-300 p-2 rounded-full">
                       <Avatar>
                         <AvatarImage
-                          src="/placeholder-user.jpg"
+                          src={player.player_image || "/placeholder-user.jpg"}
                           alt={player.player_name}
                         />
                         <AvatarFallback>
@@ -127,7 +127,7 @@ export default function TeamList() {
                           handleDeletePlayer(team, player.player_name)
                         }
                       >
-                        Editar
+                        Eliminar
                       </Button>
                     </div>
                   </div>
@@ -189,7 +189,7 @@ export default function TeamList() {
                 <Input
                   value={newTeamName}
                   onChange={(e) => setNewTeamName(e.target.value)}
-                  placeholder="Team Name"
+                  placeholder="Nombre del Equipo"
                 />
               </div>
               <div className="flex items-center justify-end gap-2">

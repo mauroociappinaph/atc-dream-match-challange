@@ -8,6 +8,7 @@ export const useTeamListHandlers = () => {
     setPlayers,
     players,
     teams,
+
     updateTeam,
     removeTeam,
     replacePlayerInTeam,
@@ -92,13 +93,14 @@ export const useTeamListHandlers = () => {
 
   const confirmDeletePlayer = () => {
     if (teamToEdit && playerToDelete) {
-      const emptyPlayer: Player = {
-        player_id: 0,
-        player_name: "",
-        player_type: "",
-        player_image: "",
+      const updatedTeam = {
+        ...teamToEdit,
+        players: teamToEdit.players.filter(
+          (player) => player.player_name !== playerToDelete
+        ),
       };
-      addAnotherPlayerAfterDelete(teamToEdit.id, playerToDelete, emptyPlayer);
+
+      updateTeam(updatedTeam);
     }
     setShowReplaceDialog(false);
   };

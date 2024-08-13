@@ -21,3 +21,5 @@ Abrir [http://localhost:3000](http://localhost:3000) con el navegador.
 - Zustand
 
 ## Deploy
+
+https://atc-dream-match-challange.vercel.app/teams

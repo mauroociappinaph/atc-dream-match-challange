@@ -1,5 +1,5 @@
 import create from "zustand";
-import { Player, Team, PlayerListStore } from "../types/index"; // Asegúrate de importar Player y Team
+import { Player, Team, PlayerListStore } from "../types/index";
 
 export const usePlayerListStore = create<PlayerListStore>((set) => ({
     players: [] as Player[],
@@ -73,19 +73,13 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
             }),
             selectedPlayers: [...state.selectedPlayers.filter(p => p.player_name !== oldPlayer), newPlayer],
         })),
-    addAnotherPlayerAfterDelete: (teamId: number, oldPlayer: string, newPlayer: Player) =>
+    addAnotherPlayerAfterDelete: (teamId: number, oldPlayer: string) =>
         set((state) => {
-            if (state.teams.length === 0 || state.selectedPlayers.length === 0 || !newPlayer) {
-                return state;
-            }
-
             const updatedTeams = state.teams.map(team => {
                 if (team.id === teamId) {
                     return {
                         ...team,
-                        players: team.players
-                            .filter(player => player.player_name !== oldPlayer)
-                            .concat(newPlayer),
+                        players: team.players.filter(player => player.player_name !== oldPlayer),
                     };
                 }
                 return team;
@@ -93,7 +87,6 @@ export const usePlayerListStore = create<PlayerListStore>((set) => ({
 
             return {
                 teams: updatedTeams,
-                selectedPlayers: state.selectedPlayers.filter(p => p.player_name !== oldPlayer),
             };
         }),
 }));
