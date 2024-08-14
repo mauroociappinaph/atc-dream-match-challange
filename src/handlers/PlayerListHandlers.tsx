@@ -5,13 +5,8 @@ import { usePlayerListStore } from "@/store/store";
 import { Player, PlayerOption, Team } from "@/types/index";
 
 export const useTeamListHandlers = () => {
-  const {
-    setPlayers,
-    players,
-    teams,
-    addSelectedPlayer,
-    removeSelectedPlayer,
-  } = usePlayerListStore();
+  const { setPlayers, players, teams, addSelectedPlayer } =
+    usePlayerListStore();
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
